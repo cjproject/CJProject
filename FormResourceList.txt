@@ -1,0 +1,860 @@
+$Forms/CXFSendingInvoice.lfrm
+{
+	TRTR.UN.0.1000001~e-Fatura Gönderimi(SATIŞ)=
+
+	TRTR.UN.0.1000002~Faturalar=
+
+	TRTR.UN.0.2000002~Filtreler=
+
+	TRTR.UN.0.2000005~&Ekle ->=
+
+	TRTR.UN.0.2000006~&Hepsini Ekle ->>=
+
+	TRTR.UN.0.2000007~<- Si&l=
+
+	TRTR.UN.0.2000008~<<- H&epsini Sil=
+
+	TRTR.UN.0.1000003~Faturalar=
+
+	TRTR.UN.0.2000010~Filtreler=
+
+	TRTR.UN.0.2000013~Kayıt Sayısı=
+
+	TRTR.UN.0.2000015~Toplam=
+
+	TRTR.UN.0.2000017~TL=
+
+	TRTR.UN.0.2000021~Vazgeç=
+
+	TRTR.UN.0.2000022~Mühüre Gönder=
+
+	TRTR.UN.0.2000023~Mühürle=
+
+	TRTR.UN.0.2000024~Mühürle ve Zarfla=
+
+}
+$Forms/CXFSendedPRBrowser.lfrm
+{
+	TRTR.UN.80300.1~Kayıtlar=
+	ENUS.UN.80300.1~Records=
+	DEDE.UN.80300.1~Daten=
+
+	TRTR.UN.80300.601~Kayıt okunuyor...=
+	ENUS.UN.80300.601~Retrieving...=
+	DEDE.UN.80300.601~Daten werden gelesen...=
+
+	TRTR.UN.80300.603~Siliniyor...=
+	ENUS.UN.80300.603~Deleting...=
+	DEDE.UN.80300.603~Löschen...=
+
+	TRTR.UN.80300.604~Kayıt başka kullanıcılar tarafından kullanılıyor.=
+	ENUS.UN.80300.604~Record has been locked by another user.=
+	DEDE.UN.80300.604~Datei wird von anderen Benutzern verwendet.=
+
+	TRTR.UN.80300.605~Kayıt okunamıyor. (Olası nedenler: silinme, veri iletişim hataları)=
+	ENUS.UN.80300.605~Cannot retrieve the record (deleted record, communication failure etc.)=
+	DEDE.UN.80300.605~Datei ist nicht lesbar. (Mögliche Ursachen: gelöscht, fehlende Verbindung)=
+
+	TRTR.UN.80300.607~Kayıt silinecektir. Devam etmek istiyor musunuz?.=
+	ENUS.UN.80300.607~Delete this record?=
+	DEDE.UN.80300.607~Eintrag löschen?=
+
+	TRTR.UN.0.3000014~Tarih=
+
+	TRTR.UN.0.3000015~Saat=
+
+	TRTR.UN.0.3000016~Durum=
+
+	TRTR.UN.0.3000017~Tipi=
+
+	TRTR.UN.0.3000018~Fatura Tarihi=
+
+	TRTR.UN.0.3000019~Fatura No=
+
+	TRTR.UN.0.3000020~Fatura Açıklaması=
+
+	TRTR.UN.0.3000021~Fatura Tutarı=
+
+	TRTR.UN.0.3000023~ETTN=
+
+	TRTR.UN.0.3000024~Alıcının Unvanı=
+
+	TRTR.UN.0.3000025~Alıcı TCKN/VKN=
+
+	TRTR.UN.0.3000027~Durum Kodu=
+
+	TRTR.UN.0.3000028~Durum Açıklaması=
+
+	TRTR.UN.80300.103~Sil=
+	ENUS.UN.80300.103~Delete=
+	DEDE.UN.80300.103~Löschen=
+
+	TRTR.UN.80300.105~İncele=
+	ENUS.UN.80300.105~View=
+	DEDE.UN.80300.105~Anzeigen=
+
+	TRTR.UN.80300.155~&Seç=
+	ENUS.UN.80300.155~&Select=
+	DEDE.UN.80300.155~&Übernehmen=
+
+	TRTR.UN.80300.153~&Kapat=
+	ENUS.UN.80300.153~C&lose=
+	DEDE.UN.80300.153~S&chließen=
+
+	TRTR.UN.80300.2~Filtreler=
+	ENUS.UN.80300.2~Filters=
+	DEDE.UN.80300.2~Filter=
+
+	TRTR.UN.0.1000020~Tarih=
+
+	TRTR.UN.0.3000005~Saat=
+
+	TRTR.UN.0.1000031~İşlem Tipi=
+
+	TRTR.UN.80300.156~&Uygula=
+	ENUS.UN.80300.156~&Apply=
+	DEDE.UN.80300.156~&Anwenden=
+
+}
+$Forms/CXFSendedInvoicesBrowser.lfrm
+{
+	TRTR.UN.80300.1~Kayıtlar=
+	ENUS.UN.80300.1~Records=
+	DEDE.UN.80300.1~Daten=
+
+	TRTR.UN.80300.601~Kayıt okunuyor...=
+	ENUS.UN.80300.601~Retrieving...=
+	DEDE.UN.80300.601~Daten werden gelesen...=
+
+	TRTR.UN.80300.603~Siliniyor...=
+	ENUS.UN.80300.603~Deleting...=
+	DEDE.UN.80300.603~Löschen...=
+
+	TRTR.UN.80300.604~Kayıt başka kullanıcılar tarafından kullanılıyor.=
+	ENUS.UN.80300.604~Record has been locked by another user.=
+	DEDE.UN.80300.604~Datei wird von anderen Benutzern verwendet.=
+
+	TRTR.UN.80300.605~Kayıt okunamıyor. (Olası nedenler: silinme, veri iletişim hataları)=
+	ENUS.UN.80300.605~Cannot retrieve the record (deleted record, communication failure etc.)=
+	DEDE.UN.80300.605~Datei ist nicht lesbar. (Mögliche Ursachen: gelöscht, fehlende Verbindung)=
+
+	TRTR.UN.80300.607~Kayıt silinecektir. Devam etmek istiyor musunuz?.=
+	ENUS.UN.80300.607~Delete this record?=
+	DEDE.UN.80300.607~Eintrag löschen?=
+
+	TRTR.UN.0.3000014~Tarih=
+
+	TRTR.UN.0.3000015~Saat=
+
+	TRTR.UN.0.3000016~Durum=
+
+	TRTR.UN.0.3000017~Tipi=
+
+	TRTR.UN.0.3000018~Fatura Tarihi=
+
+	TRTR.UN.0.3000019~Fatura No=
+
+	TRTR.UN.0.3000020~Fatura Açıklaması=
+
+	TRTR.UN.0.3000021~Fatura Tutarı=
+
+	TRTR.UN.0.3000022~Senaryo=
+
+	TRTR.UN.0.3000023~ETTN=
+
+	TRTR.UN.0.3000024~Alıcının Unvanı=
+
+	TRTR.UN.0.3000025~Alıcı TCKN/VKN=
+
+	TRTR.UN.0.3000026~Açıklama=
+
+	TRTR.UN.0.3000027~Durum Kodu=
+
+	TRTR.UN.0.3000028~Durum Açıklaması=
+
+	TRTR.UN.80300.103~Sil=
+	ENUS.UN.80300.103~Delete=
+	DEDE.UN.80300.103~Löschen=
+
+	TRTR.UN.80300.105~İncele=
+	ENUS.UN.80300.105~View=
+	DEDE.UN.80300.105~Anzeigen=
+
+	TRTR.UN.80300.155~&Seç=
+	ENUS.UN.80300.155~&Select=
+	DEDE.UN.80300.155~&Übernehmen=
+
+	TRTR.UN.80300.153~&Kapat=
+	ENUS.UN.80300.153~C&lose=
+	DEDE.UN.80300.153~S&chließen=
+
+	TRTR.UN.80300.2~Filtreler=
+	ENUS.UN.80300.2~Filters=
+	DEDE.UN.80300.2~Filter=
+
+	TRTR.UN.0.1000020~Tarih=
+
+	TRTR.UN.0.3000005~Saat=
+
+	TRTR.UN.0.1000031~İşlem Tipi=
+
+	TRTR.UN.80300.156~&Uygula=
+	ENUS.UN.80300.156~&Apply=
+	DEDE.UN.80300.156~&Anwenden=
+
+}
+$Forms/CXFSendRecieve.lfrm
+{
+	DEDE.UN.0.1000001~=
+	TRTR.UN.0.1000001~Gönder/Al=
+	ENUS.UN.0.1000001~=
+
+	DEDE.UN.0.2000001~=
+	TRTR.UN.0.2000001~Bağlantı Adresi=
+	ENUS.UN.0.2000001~=
+
+	DEDE.UN.0.2000002~=
+	TRTR.UN.0.2000002~xyz=
+	ENUS.UN.0.2000002~=
+
+	DEDE.UN.0.2000004~=
+	TRTR.UN.0.2000004~&Gönder/Al=
+	ENUS.UN.0.2000004~=
+
+	DEDE.UN.0.2000005~=
+	TRTR.UN.0.2000005~&Kapat=
+	ENUS.UN.0.2000005~=
+
+}
+$Forms/CXFReceivedSRBrowser.lfrm
+{
+	DEDE.UN.0.1000004~=
+	TRTR.UN.0.1000004~Gelen Sistem Yanıtları=
+	ENUS.UN.0.1000004~=
+
+	TRTR.UN.80300.1~Kayıtlar=
+	ENUS.UN.80300.1~Records=
+	DEDE.UN.80300.1~Daten=
+
+	TRTR.UN.80300.601~Kayıt okunuyor...=
+	ENUS.UN.80300.601~Retrieving...=
+	DEDE.UN.80300.601~Daten werden gelesen...=
+
+	TRTR.UN.80300.603~Siliniyor...=
+	ENUS.UN.80300.603~Deleting...=
+	DEDE.UN.80300.603~Löschen...=
+
+	TRTR.UN.80300.604~Kayıt başka kullanıcılar tarafından kullanılıyor.=
+	ENUS.UN.80300.604~Record has been locked by another user.=
+	DEDE.UN.80300.604~Datei wird von anderen Benutzern verwendet.=
+
+	TRTR.UN.80300.605~Kayıt okunamıyor. (Olası nedenler: silinme, veri iletişim hataları)=
+	ENUS.UN.80300.605~Cannot retrieve the record (deleted record, communication failure etc.)=
+	DEDE.UN.80300.605~Datei ist nicht lesbar. (Mögliche Ursachen: gelöscht, fehlende Verbindung)=
+
+	TRTR.UN.80300.607~Kayıt silinecektir. Devam etmek istiyor musunuz?.=
+	ENUS.UN.80300.607~Delete this record?=
+	DEDE.UN.80300.607~Eintrag löschen?=
+
+	TRTR.UN.0.3000014~Tarih=
+
+	TRTR.UN.0.3000015~Saat=
+
+	DEDE.UN.0.3000024~=
+	TRTR.UN.0.3000024~Gönderen Unvanı=
+	ENUS.UN.0.3000024~=
+
+	TRTR.UN.0.3000023~ETTN=
+
+	DEDE.UN.0.3000025~=
+	TRTR.UN.0.3000025~Gönderen TCKN/VKN=
+	ENUS.UN.0.3000025~=
+
+	TRTR.UN.0.3000026~Açıklama=
+
+	DEDE.UN.0.3000027~=
+	TRTR.UN.0.3000027~Gönderici Birim Etiketi=
+	ENUS.UN.0.3000027~=
+
+	TRTR.UN.80300.103~Sil=
+	ENUS.UN.80300.103~Delete=
+	DEDE.UN.80300.103~Löschen=
+
+	TRTR.UN.80300.105~İncele=
+	ENUS.UN.80300.105~View=
+	DEDE.UN.80300.105~Anzeigen=
+
+	TRTR.UN.80300.155~&Seç=
+	ENUS.UN.80300.155~&Select=
+	DEDE.UN.80300.155~&Übernehmen=
+
+	TRTR.UN.80300.153~&Kapat=
+	ENUS.UN.80300.153~C&lose=
+	DEDE.UN.80300.153~S&chließen=
+
+	TRTR.UN.80300.2~Filtreler=
+	ENUS.UN.80300.2~Filters=
+	DEDE.UN.80300.2~Filter=
+
+	TRTR.UN.0.1000020~Tarih=
+
+	TRTR.UN.0.3000005~Saat=
+
+	TRTR.UN.0.1000031~İşlem Tipi=
+
+	TRTR.UN.80300.156~&Uygula=
+	ENUS.UN.80300.156~&Apply=
+	DEDE.UN.80300.156~&Anwenden=
+
+}
+$Forms/CXFReceivedPRBrowser.lfrm
+{
+	DEDE.UN.0.1000004~=
+	TRTR.UN.0.1000004~Gelen Uygulama Yanıtları=
+	ENUS.UN.0.1000004~=
+
+	TRTR.UN.80300.1~Kayıtlar=
+	ENUS.UN.80300.1~Records=
+	DEDE.UN.80300.1~Daten=
+
+	TRTR.UN.80300.601~Kayıt okunuyor...=
+	ENUS.UN.80300.601~Retrieving...=
+	DEDE.UN.80300.601~Daten werden gelesen...=
+
+	TRTR.UN.80300.603~Siliniyor...=
+	ENUS.UN.80300.603~Deleting...=
+	DEDE.UN.80300.603~Löschen...=
+
+	TRTR.UN.80300.604~Kayıt başka kullanıcılar tarafından kullanılıyor.=
+	ENUS.UN.80300.604~Record has been locked by another user.=
+	DEDE.UN.80300.604~Datei wird von anderen Benutzern verwendet.=
+
+	TRTR.UN.80300.605~Kayıt okunamıyor. (Olası nedenler: silinme, veri iletişim hataları)=
+	ENUS.UN.80300.605~Cannot retrieve the record (deleted record, communication failure etc.)=
+	DEDE.UN.80300.605~Datei ist nicht lesbar. (Mögliche Ursachen: gelöscht, fehlende Verbindung)=
+
+	TRTR.UN.80300.607~Kayıt silinecektir. Devam etmek istiyor musunuz?.=
+	ENUS.UN.80300.607~Delete this record?=
+	DEDE.UN.80300.607~Eintrag löschen?=
+
+	TRTR.UN.0.3000014~Tarih=
+
+	TRTR.UN.0.3000015~Saat=
+
+	TRTR.UN.0.3000016~Durum=
+
+	DEDE.UN.0.3000024~=
+	TRTR.UN.0.3000024~Gönderen Unvanı=
+	ENUS.UN.0.3000024~=
+
+	TRTR.UN.0.3000018~Fatura Tarihi=
+
+	TRTR.UN.0.3000019~Fatura No=
+
+	TRTR.UN.0.3000020~Fatura Açıklaması=
+
+	TRTR.UN.0.3000021~Fatura Tutarı=
+
+	TRTR.UN.0.3000023~ETTN=
+
+	DEDE.UN.0.3000025~=
+	TRTR.UN.0.3000025~Gönderen TCKN/VKN=
+	ENUS.UN.0.3000025~=
+
+	TRTR.UN.0.3000026~Açıklama=
+
+	TRTR.UN.0.3000027~Durum Kodu=
+
+	TRTR.UN.0.3000028~Durum Açıklaması=
+
+	TRTR.UN.80300.103~Sil=
+	ENUS.UN.80300.103~Delete=
+	DEDE.UN.80300.103~Löschen=
+
+	TRTR.UN.80300.105~İncele=
+	ENUS.UN.80300.105~View=
+	DEDE.UN.80300.105~Anzeigen=
+
+	TRTR.UN.80300.155~&Seç=
+	ENUS.UN.80300.155~&Select=
+	DEDE.UN.80300.155~&Übernehmen=
+
+	TRTR.UN.80300.153~&Kapat=
+	ENUS.UN.80300.153~C&lose=
+	DEDE.UN.80300.153~S&chließen=
+
+	TRTR.UN.80300.2~Filtreler=
+	ENUS.UN.80300.2~Filters=
+	DEDE.UN.80300.2~Filter=
+
+	TRTR.UN.0.1000020~Tarih=
+
+	TRTR.UN.0.3000005~Saat=
+
+	TRTR.UN.0.1000031~İşlem Tipi=
+
+	TRTR.UN.80300.156~&Uygula=
+	ENUS.UN.80300.156~&Apply=
+	DEDE.UN.80300.156~&Anwenden=
+
+}
+$Forms/CXFReceivedInvoicesBrowser.lfrm
+{
+	DEDE.UN.0.1000004~=
+	TRTR.UN.0.1000004~Gelen Faturalar=
+	ENUS.UN.0.1000004~=
+
+	TRTR.UN.80300.1~Kayıtlar=
+	ENUS.UN.80300.1~Records=
+	DEDE.UN.80300.1~Daten=
+
+	TRTR.UN.80300.601~Kayıt okunuyor...=
+	ENUS.UN.80300.601~Retrieving...=
+	DEDE.UN.80300.601~Daten werden gelesen...=
+
+	TRTR.UN.80300.603~Siliniyor...=
+	ENUS.UN.80300.603~Deleting...=
+	DEDE.UN.80300.603~Löschen...=
+
+	TRTR.UN.80300.604~Kayıt başka kullanıcılar tarafından kullanılıyor.=
+	ENUS.UN.80300.604~Record has been locked by another user.=
+	DEDE.UN.80300.604~Datei wird von anderen Benutzern verwendet.=
+
+	TRTR.UN.80300.605~Kayıt okunamıyor. (Olası nedenler: silinme, veri iletişim hataları)=
+	ENUS.UN.80300.605~Cannot retrieve the record (deleted record, communication failure etc.)=
+	DEDE.UN.80300.605~Datei ist nicht lesbar. (Mögliche Ursachen: gelöscht, fehlende Verbindung)=
+
+	TRTR.UN.80300.607~Kayıt silinecektir. Devam etmek istiyor musunuz?.=
+	ENUS.UN.80300.607~Delete this record?=
+	DEDE.UN.80300.607~Eintrag löschen?=
+
+	TRTR.UN.0.3000014~Tarih=
+
+	TRTR.UN.0.3000015~Saat=
+
+	TRTR.UN.0.3000016~Durum=
+
+	DEDE.UN.0.3000024~=
+	TRTR.UN.0.3000024~Gönderen Unvan=
+	ENUS.UN.0.3000024~=
+
+	TRTR.UN.0.3000017~Tipi=
+
+	TRTR.UN.0.3000018~Fatura Tarihi=
+
+	TRTR.UN.0.3000019~Fatura No=
+
+	TRTR.UN.0.3000020~Fatura Açıklaması=
+
+	TRTR.UN.0.3000021~Fatura Tutarı=
+
+	TRTR.UN.0.3000022~Senaryo=
+
+	TRTR.UN.0.3000023~ETTN=
+
+	DEDE.UN.0.3000025~=
+	TRTR.UN.0.3000025~Gönderen TCKN/VKN=
+	ENUS.UN.0.3000025~=
+
+	TRTR.UN.0.3000026~Açıklama=
+
+	TRTR.UN.80300.103~Sil=
+	ENUS.UN.80300.103~Delete=
+	DEDE.UN.80300.103~Löschen=
+
+	TRTR.UN.80300.105~İncele=
+	ENUS.UN.80300.105~View=
+	DEDE.UN.80300.105~Anzeigen=
+
+	TRTR.UN.80300.155~&Seç=
+	ENUS.UN.80300.155~&Select=
+	DEDE.UN.80300.155~&Übernehmen=
+
+	TRTR.UN.80300.153~&Kapat=
+	ENUS.UN.80300.153~C&lose=
+	DEDE.UN.80300.153~S&chließen=
+
+	TRTR.UN.80300.2~Filtreler=
+	ENUS.UN.80300.2~Filters=
+	DEDE.UN.80300.2~Filter=
+
+	TRTR.UN.0.1000020~Tarih=
+
+	TRTR.UN.0.3000005~Saat=
+
+	TRTR.UN.0.1000031~İşlem Tipi=
+
+	TRTR.UN.80300.156~&Uygula=
+	ENUS.UN.80300.156~&Apply=
+	DEDE.UN.80300.156~&Anwenden=
+
+}
+$Forms/CXFPostBox.lfrm
+{
+	TRTR.UN.0.1000001~Posta Kutusu=
+
+	TRTR.UN.8800.113~Aynı özelliklerde başka kayıt var.=
+	ENUS.UN.8800.113~A record with these properties already exists.=
+	DEDE.UN.8800.113~Datei mit denselben Einstellungen ist bereits vorhanden.=
+
+	TRTR.UN.8800.114~Kaydedilemedi. Sorun devam ederse sistem yöneticinize danışınız.=
+	ENUS.UN.8800.114~Could not save the record. If the problem persists, please contact your system administrator.=
+	DEDE.UN.8800.114~Speichern nicht möglich. Sollte das Problem fortbestehen, wenden Sie sich an Ihren Systemadministrator.=
+
+	TRTR.UN.8802.101~Kaydediliyor...=
+	ENUS.UN.8802.101~Saving...=
+	DEDE.UN.8802.101~Daten werden gespeichert...=
+
+	TRTR.UN.0.1000005~Gelen İşlemler=
+
+	TRTR.UN.8802.100~Okunuyor...=
+	ENUS.UN.8802.100~Retrieving...=
+	DEDE.UN.8802.100~Daten werden gelesen...=
+
+	TRTR.UN.8802.102~Siliniyor...=
+	ENUS.UN.8802.102~Deleting...=
+	DEDE.UN.8802.102~Löschen...=
+
+	TRTR.UN.8800.100~Seçilen kayıt bir başka kullanıcı tarafından kullanılıyor. Şimdilik bu kaydı sadece inceleyebilirsiniz. Değişiklik yapmak isterseniz bir süre sonra tekrar deneyiniz.=
+	ENUS.UN.8800.100~The selected record is being used by another user. for the time being, you can only view this record. If you want to update this record, try again later.=
+	DEDE.UN.8800.100~Die Datei wird von einem anderen Benutzer verwendet. Sie können die Datei betrachten. Veränderungen nehmen Sie bitte zu einem späteren Zeitpunkt vor.=
+
+	TRTR.UN.8800.101~Seçilen kayıt okunamıyor. Kayıt silinmiş olabilir. Listeyi tazeledikten sonra tekrar deneyiniz. Sorun devam ederse sistem yöneticinize danışınız.=
+	ENUS.UN.8800.101~The selected record cannot be retrieved. It may have been deleted. Please retry after refreshing the list. If the problem persists, please contact your system administrator.=
+	DEDE.UN.8800.101~Datei kann nicht gelesen werden. Möglicherweise wurde sie gelöscht. Bitte aktualisieren Sie die Liste und versuchen es erneut. Sollte das Problem fortbestehen, wenden Sie sich an Ihren Systemadministrator.=
+
+	TRTR.UN.8801.100~Seçilen kayıt silinecektir. Devam etmek istiyor musunuz?=
+	ENUS.UN.8801.100~The selected record will be deleted. Do you want to proceed?=
+	DEDE.UN.8801.100~Eintrag wird gelöscht. Möchten Sie fortfahren?=
+
+	TRTR.UN.8800.107~Seçilen kayıt silinemiyor. Kayıt başka bir kullanıcı tarafından silinmiş olabilir. Listeyi tazeledikten sonra tekrar deneyiniz. Sorun devam ederse sistem yöneticinize danışınız.=
+	ENUS.UN.8800.107~The selected record cannot be deleted. It may have been deleted by another user. Please retry after refreshing the list. If the problem persists, please contact your system administrator.=
+	DEDE.UN.8800.107~Datei kann nicht gelöscht werden. Möglicherweise wurde sie von einem anderen Benutzer gelöscht. Bitte aktualisieren Sie die Liste und versuchen es erneut. Sollte das Problem fortbestehen, wenden Sie sich an Ihren Systemadministrator.=
+
+	TRTR.UN.0.102~Tarih=
+
+	TRTR.UN.0.3000031~Saat=
+
+	TRTR.UN.0.137~Gönderen=
+
+	TRTR.UN.0.3000034~Gönderen Ünvanı=
+
+	TRTR.UN.0.113~İşlem Tipi=
+
+	TRTR.UN.0.126~Açıklama=
+
+	TRTR.UN.0.3000006~Belge No=
+
+	TRTR.UN.0.3000007~Belge Tarihi=
+
+	TRTR.UN.0.3000008~Belge Tutarı=
+
+	TRTR.UN.0.3000009~Belge Açıklaması=
+
+	TRTR.UN.0.3000011~Gönderici Birim Etiketi=
+
+	TRTR.UN.0.3000013~ETTN=
+
+	TRTR.UN.0.3000035~Zarf Id=
+
+	TRTR.UN.0.3000030~Kaydet=
+
+	TRTR.UN.12000.2~Filtreler=
+	ENUS.UN.12000.2~Filters=
+	DEDE.UN.12000.2~Filter=
+
+	TRTR.UN.0.1000040~Tarih=
+
+	TRTR.UN.0.3000004~Saat=
+
+	TRTR.UN.0.1000041~Gönderen=
+
+	TRTR.UN.0.111051~İşlem Tipi=
+
+	TRTR.UN.12000.109~Filtre değerlerini sakla=
+	ENUS.UN.12000.109~Save filter settings=
+	DEDE.UN.12000.109~Speichern Filter=
+
+	TRTR.UN.12000.110~Filtre değerlerini yükle=
+	ENUS.UN.12000.110~Load filter settings=
+	DEDE.UN.12000.110~Laden Filter=
+
+	TRTR.UN.12000.156~&Uygula=
+	ENUS.UN.12000.156~&Apply=
+	DEDE.UN.12000.156~&Anwenden=
+
+	TRTR.UN.12000.1~Kayıtlar=
+	ENUS.UN.12000.1~Records=
+	DEDE.UN.12000.1~Daten=
+
+	TRTR.UN.0.3000014~Tarih=
+
+	TRTR.UN.0.3000015~Saat=
+
+	TRTR.UN.0.213~İşlem Tipi=
+
+	TRTR.UN.0.3000032~Kayıt Sayısı=
+
+	TRTR.UN.0.3000025~Alıcı TCKN/VKN=
+
+	TRTR.UN.0.3000026~Açıklama=
+
+	TRTR.UN.0.3000033~Paket Numarası=
+
+	TRTR.UN.0.3000040~Gönder/Al=
+
+	TRTR.UN.0.3000041~Kapat=
+
+	TRTR.UN.12000.2~Filtreler=
+	ENUS.UN.12000.2~Filters=
+	DEDE.UN.12000.2~Filter=
+
+	TRTR.UN.0.1000020~Tarih=
+
+	TRTR.UN.0.3000005~Saat=
+
+	TRTR.UN.0.1000031~İşlem Tipi=
+
+	TRTR.UN.12000.109~Filtre değerlerini sakla=
+	ENUS.UN.12000.109~Save filter settings=
+	DEDE.UN.12000.109~Speichern Filter=
+
+	TRTR.UN.12000.110~Filtre değerlerini yükle=
+	ENUS.UN.12000.110~Load filter settings=
+	DEDE.UN.12000.110~Laden Filter=
+
+	TRTR.UN.12000.156~&Uygula=
+	ENUS.UN.12000.156~&Apply=
+	DEDE.UN.12000.156~&Anwenden=
+
+}
+$Forms/CXFInvoicesBrowser.lfrm
+{
+	TRTR.UN.12000.1~Kayıtlar=
+	ENUS.UN.12000.1~Records=
+	DEDE.UN.12000.1~Daten=
+
+	TRTR.UN.8802.100~Okunuyor...=
+	ENUS.UN.8802.100~Retrieving...=
+	DEDE.UN.8802.100~Daten werden gelesen...=
+
+	TRTR.UN.8802.102~Siliniyor...=
+	ENUS.UN.8802.102~Deleting...=
+	DEDE.UN.8802.102~Löschen...=
+
+	TRTR.UN.8800.100~Seçilen kayıt bir başka kullanıcı tarafından kullanılıyor. Şimdilik bu kaydı sadece inceleyebilirsiniz. Değişiklik yapmak isterseniz bir süre sonra tekrar deneyiniz.=
+	ENUS.UN.8800.100~The selected record is being used by another user. for the time being, you can only view this record. If you want to update this record, try again later.=
+	DEDE.UN.8800.100~Die Datei wird von einem anderen Benutzer verwendet. Sie können die Datei betrachten. Veränderungen nehmen Sie bitte zu einem späteren Zeitpunkt vor.=
+
+	TRTR.UN.8800.101~Seçilen kayıt okunamıyor. Kayıt silinmiş olabilir. Listeyi tazeledikten sonra tekrar deneyiniz. Sorun devam ederse sistem yöneticinize danışınız.=
+	ENUS.UN.8800.101~The selected record cannot be retrieved. It may have been deleted. Please retry after refreshing the list. If the problem persists, please contact your system administrator.=
+	DEDE.UN.8800.101~Datei kann nicht gelesen werden. Möglicherweise wurde sie gelöscht. Bitte aktualisieren Sie die Liste und versuchen es erneut. Sollte das Problem fortbestehen, wenden Sie sich an Ihren Systemadministrator.=
+
+	TRTR.UN.8801.100~Seçilen kayıt silinecektir. Devam etmek istiyor musunuz?=
+	ENUS.UN.8801.100~The selected record will be deleted. Do you want to proceed?=
+	DEDE.UN.8801.100~Eintrag wird gelöscht. Möchten Sie fortfahren?=
+
+	TRTR.UN.8800.107~Seçilen kayıt silinemiyor. Kayıt başka bir kullanıcı tarafından silinmiş olabilir. Listeyi tazeledikten sonra tekrar deneyiniz. Sorun devam ederse sistem yöneticinize danışınız.=
+	ENUS.UN.8800.107~The selected record cannot be deleted. It may have been deleted by another user. Please retry after refreshing the list. If the problem persists, please contact your system administrator.=
+	DEDE.UN.8800.107~Datei kann nicht gelöscht werden. Möglicherweise wurde sie von einem anderen Benutzer gelöscht. Bitte aktualisieren Sie die Liste und versuchen es erneut. Sollte das Problem fortbestehen, wenden Sie sich an Ihren Systemadministrator.=
+
+	TRTR.UN.12316.2~İptal=
+	ENUS.UN.12316.2~Cancel=
+	DEDE.UN.12316.2~Storniert=
+
+	TRTR.UN.12000.702~Tarih=
+	ENUS.UN.12000.702~Date=
+	DEDE.UN.12000.702~Belegdatum=
+
+	TRTR.UN.12000.707~Tür=
+	ENUS.UN.12000.707~Type=
+	DEDE.UN.12000.707~Art=
+
+	TRTR.UN.12050.2~No=
+	ENUS.UN.12050.2~No.=
+	DEDE.UN.12050.2~Rechnungsnr.=
+
+	TRTR.UN.12000.709~Durum=
+	ENUS.UN.12000.709~Status=
+	DEDE.UN.12000.709~Status=
+
+	TRTR.UN.12000.706~Belge No=
+	ENUS.UN.12000.706~Document No.=
+	DEDE.UN.12000.706~Interne Nr.=
+
+	TRTR.UN.18539.1021~Cari Hesap Kodu=
+	ENUS.UN.18539.1021~AR/AP Code=
+	DEDE.UN.18539.1021~Debitor/Kreditor=
+
+	TRTR.UN.18539.1005~Cari Hesap Unvanı=
+	ENUS.UN.18539.1005~AR/AP Title=
+	DEDE.UN.18539.1005~Kunden-/Lieferantenbezeichnung=
+
+	TRTR.UN.18539.1006~Tutar=
+	ENUS.UN.18539.1006~Amount=
+	DEDE.UN.18539.1006~Betrag=
+
+	TRTR.UN.18539.1010~KDV'siz Tutar=
+	ENUS.UN.18539.1010~VAT Exclusive Amount=
+	DEDE.UN.18539.1010~Betrag exkl. USt=
+
+	TRTR.UN.18539.1011~Tutar (RPB)=
+	ENUS.UN.18539.1011~Amount (RC)=
+	DEDE.UN.18539.1011~Betrag (FW)=
+
+	TRTR.UN.18539.103~Ödeme Durumu=
+	ENUS.UN.18539.103~Payment Status=
+	DEDE.UN.18539.103~Zahlungsstatus=
+
+	TRTR.UN.18539.1022~Organizasyonel Birim Kodu=
+	ENUS.UN.18539.1022~Organizational Unit=
+	DEDE.UN.18539.1022~Orgaeinheit=
+
+	TRTR.UN.18539.1023~Organizasyonel Birim Açıklaması=
+	ENUS.UN.18539.1023~Organizational Unit Description=
+	DEDE.UN.18539.1023~Bezeichnung=
+
+	TRTR.UN.18539.1009~Ambar=
+	ENUS.UN.18539.1009~Warehouse=
+	DEDE.UN.18539.1009~Lager=
+
+	TRTR.UN.18539.1008~Bölüm=
+	ENUS.UN.18539.1008~Department=
+	DEDE.UN.18539.1008~Abteilung=
+
+	TRTR.UN.12000.708~Doküman İzleme No=
+	ENUS.UN.12000.708~Document Tracking No.=
+	DEDE.UN.12000.708~Interne Verfolgungsnr.=
+
+	TRTR.UN.12030.107~Dış Ticaret=
+	ENUS.UN.12030.107~Foreign Trade=
+	DEDE.UN.12030.107~Außenhandel=
+
+	TRTR.UN.9107.1~SMM Mahsubu=
+	ENUS.UN.9107.1~CGS Journal Slip=
+	DEDE.UN.9107.1~Wareneinsatzkosten Belegnr.=
+
+	TRTR.UN.18491.5000~E-Fatura=
+	ENUS.UN.18491.5000~e-Invoice=
+	DEDE.UN.18491.5000~e-Invoice=
+
+	TRTR.UN.18491.5001~E-Fatura Durumu=
+	ENUS.UN.18491.5001~e-Invoice Status=
+	DEDE.UN.18491.5001~e-Invoice Status=
+
+	TRTR.UN.18491.5002~Çapraz Hareket=
+	ENUS.UN.18491.5002~Cross Transaction=
+	DEDE.UN.18491.5002~Cross Transaction=
+
+	TRTR.UN.12000.101~Ekle=
+	ENUS.UN.12000.101~New=
+	DEDE.UN.12000.101~Neu=
+
+	TRTR.UN.12000.101~Ekle=
+	ENUS.UN.12000.101~New=
+	DEDE.UN.12000.101~Neu=
+
+	TRTR.UN.12000.102~Değiştir=
+	ENUS.UN.12000.102~Update=
+	DEDE.UN.12000.102~Bearbeiten=
+
+	TRTR.UN.12000.103~Sil=
+	ENUS.UN.12000.103~Delete=
+	DEDE.UN.12000.103~Löschen=
+
+	TRTR.UN.12000.104~Kopyala=
+	ENUS.UN.12000.104~Copy=
+	DEDE.UN.12000.104~Kopieren=
+
+	TRTR.UN.12000.105~İncele=
+	ENUS.UN.12000.105~View=
+	DEDE.UN.12000.105~Anzeigen=
+
+	TRTR.UN.12000.106~Bağlı Kayıtlar=
+	ENUS.UN.12000.106~Attached Records=
+	DEDE.UN.12000.106~Verbundene Daten=
+
+	TRTR.UN.12000.107~Bilgiler=
+	ENUS.UN.12000.107~Info=
+	DEDE.UN.12000.107~Informationen=
+
+	TRTR.UN.12000.155~&Seç=
+	ENUS.UN.12000.155~&Select=
+	DEDE.UN.12000.155~&Übernehmen=
+
+	TRTR.UN.12000.153~&Kapat=
+	ENUS.UN.12000.153~C&lose=
+	DEDE.UN.12000.153~Abbrechen=
+
+	TRTR.UN.12000.2~Filtreler=
+	ENUS.UN.12000.2~Filters=
+	DEDE.UN.12000.2~Filter=
+
+	TRTR.UN.12000.109~Filtre değerlerini sakla=
+	ENUS.UN.12000.109~Save filter settings=
+	DEDE.UN.12000.109~Speichern Filter=
+
+	TRTR.UN.12000.110~Filtre değerlerini yükle=
+	ENUS.UN.12000.110~Load filter settings=
+	DEDE.UN.12000.110~Laden Filter=
+
+	TRTR.UN.12000.156~&Uygula=
+	ENUS.UN.12000.156~&Apply=
+	DEDE.UN.12000.156~&Anwenden=
+
+	TRTR.UN.17032.4~Seç=
+	ENUS.UN.17032.4~Select=
+	DEDE.UN.17032.4~Eintragen=
+
+	TRTR.UN.12000.153~&Kapat=
+	ENUS.UN.12000.153~C&lose=
+	DEDE.UN.12000.153~Abbrechen=
+
+}
+$Forms/CXFEDocument.lfrm
+{
+	TRTR.UN.0.1000001~e-Fatura=
+
+	TRTR.UN.0.2000003~İlişkili Fatura=
+
+	TRTR.UN.0.2000004~Kabul Et=
+
+	TRTR.UN.0.2000005~Reddet=
+
+	TRTR.UN.0.2000006~Vazgeç=
+
+	TRTR.UN.0.2000007~Kapat=
+
+}
+$Forms/CXFConnParam.lfrm
+{
+	TRTR.UN.0.1000001~Bağlantı Ayarları=
+
+	TRTR.UN.0.2000002~Bağlantı Adresi=
+
+	TRTR.UN.0.2000004~Kullanıcı Adı=
+
+	TRTR.UN.0.2000006~Şifre=
+
+	TRTR.UN.0.2000008~Proxy Sunucu=
+
+	TRTR.UN.0.2000010~&Kaydet=
+
+	TRTR.UN.0.2000011~&Vazgeç=
+
+}
+$Forms/CXFAcceptReject.lfrm
+{
+	DEDE.UN.0.1000001~=
+	TRTR.UN.0.1000001~Kabul/Red Mesaj Ekranı=
+	ENUS.UN.0.1000001~=
+
+	DEDE.UN.0.2000003~=
+	TRTR.UN.0.2000003~Vazgeç=
+	ENUS.UN.0.2000003~=
+
+	DEDE.UN.0.2000004~=
+	TRTR.UN.0.2000004~Zarfla=
+	ENUS.UN.0.2000004~=
+
+}

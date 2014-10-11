@@ -1,0 +1,952 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XUIForm Tag="1000001" Title="Posta Kutusu" XUIDoc="EInvoice PostBox" UniqueID="CXFPostBox" CustomizationEventHandler="com.acme.customization.forms.CXEPostBox">
+	<Property StatusBarSections="(message 0)(message 30)" />
+	<Property Message_DuplicateFailure="Aynı özelliklerde başka kayıt var." />
+	<Property Message_SaveFailure="Kaydedilemedi. Sorun devam ederse sistem yöneticinize danışınız." />
+	<Property Message_DataSave="Kaydediliyor..." />
+	<Property ResGroup="UN" />
+	<Property CustLibVersion="v2.31.8.1" />
+	<Property Cols="5.0, 1245.0, F" />
+	<Property Rows="5.0, 404.0, 14.0, 426.0" />
+	<Property FormVersion="TABLELAYOUT" />
+	<Property CustFormWidth="1304" />
+	<Property CustFormHeight="924" />
+	<Property CustModal="FALSE" />
+	<Property BorderType="NONE" />
+	<Property ListID="0" />
+	<CustEvent onInitialize="onInitialize" />
+	<CustEvent onPopupMenuFilter="onPopupMenuFilter" />
+	<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+		<InlineData>
+			<InlineItem Language="TRTR" Value="Posta Kutusu"/>
+		</InlineData>
+	</Resource>
+	<Resource Property="Message_DuplicateFailure" ListID="8800" StringTag="113"/>
+	<Resource Property="Message_SaveFailure" ListID="8800" StringTag="114"/>
+	<Resource Property="Message_DataSave" ListID="8802" StringTag="101"/>
+	<Control Type="POPUPMENU" Tag="500" XUIDoc="Popup procs">
+		<Property Attribute="FORMPOPUP" />
+		<Property LayoutX="-1" />
+		<Property LayoutY="-1" />
+		<Property Col1="0" />
+		<Property Col2="0" />
+		<Property Row1="0" />
+		<Property Row2="0" />
+		<Property Anchors="L-T" />
+		<Property Resource="Sil" />
+		<Property ListID="0" />
+		<Resource Property="Message" ListID="0" StringTag="1" ResourceType="INLINE">
+			<InlineData>
+				<InlineItem Language="TRTR" Value="İncele"/>
+				<InlineItem Language="NEUT" Value="İncele"/>
+				<InlineItem Language="ENUS" Value="View"/>
+			</InlineData>
+		</Resource>
+		<Resource Property="Message" ListID="0" StringTag="2" ResourceType="INLINE">
+			<InlineData>
+				<InlineItem Language="TRTR" Value="Sil"/>
+				<InlineItem Language="NEUT" Value="Sil"/>
+				<InlineItem Language="ENUS" Value="Delete"/>
+			</InlineData>
+		</Resource>
+		<Resource Property="Message" ListID="0" StringTag="3" ResourceType="INLINE">
+			<InlineData>
+				<InlineItem Language="TRTR" Value="Sil"/>
+				<InlineItem Language="NEUT" Value="Sil"/>
+				<InlineItem Language="ENUS" Value="Delete"/>
+			</InlineData>
+		</Resource>
+		<Resource Property="Message" ListID="0" StringTag="1" ResourceType="INLINE">
+			<InlineData>
+				<InlineItem Language="TRTR" Value="İncele"/>
+				<InlineItem Language="NEUT" Value="İncele"/>
+				<InlineItem Language="ENUS" Value="View"/>
+			</InlineData>
+		</Resource>
+		<Resource Property="Message" ListID="0" StringTag="2" ResourceType="INLINE">
+			<InlineData>
+				<InlineItem Language="TRTR" Value="İncele"/>
+				<InlineItem Language="NEUT" Value="İncele"/>
+				<InlineItem Language="ENUS" Value="View"/>
+			</InlineData>
+		</Resource>
+		<Resource Property="Message" ListID="0" StringTag="4" ResourceType="INLINE">
+			<InlineData>
+				<InlineItem Language="TRTR" Value="Sil"/>
+				<InlineItem Language="NEUT" Value="Sil"/>
+				<InlineItem Language="ENUS" Value="Delete"/>
+			</InlineData>
+		</Resource>
+		<TaggedList ListID="0" ResourceType="INLINE">
+			<InlineList>
+				<Resource Property="ListID" ListID="0" StringTag="1" ResourceType="INLINE" ResourceGroup="UN">
+					<InlineData>
+						<InlineItem Language="TRTR" Value="İncele"/>
+						<InlineItem Language="NEUT" Value="İncele"/>
+						<InlineItem Language="ENUS" Value="View"/>
+					</InlineData>
+				</Resource>
+				<Resource Property="ListID" ListID="0" StringTag="2" ResourceType="INLINE" ResourceGroup="UN">
+					<InlineData>
+						<InlineItem Language="TRTR" Value="İncele"/>
+						<InlineItem Language="NEUT" Value="İncele"/>
+						<InlineItem Language="ENUS" Value="View"/>
+					</InlineData>
+				</Resource>
+				<Resource Property="Message" ListID="0" StringTag="3" ResourceType="INLINE">
+					<InlineData>
+						<InlineItem Language="TRTR" Value="Sil"/>
+						<InlineItem Language="NEUT" Value="Sil"/>
+						<InlineItem Language="ENUS" Value="Delete"/>
+					</InlineData>
+				</Resource>
+				<Resource Property="Message" ListID="0" StringTag="4" ResourceType="INLINE">
+					<InlineData>
+						<InlineItem Language="TRTR" Value="Sil"/>
+						<InlineItem Language="NEUT" Value="Sil"/>
+						<InlineItem Language="ENUS" Value="Delete"/>
+					</InlineData>
+				</Resource>
+			</InlineList>
+		</TaggedList>
+		<Action Context="LISTSELECTION" Param="1">
+			<Command Name="INVOKE" Parameters="onClickViewRecieved"/>
+		</Action>
+		<Action Context="LISTSELECTION" Param="2">
+			<Command Name="INVOKE" Parameters="onClickViewPackageContent"/>
+		</Action>
+		<Action Context="LISTSELECTION" Param="3">
+			<Command Name="DBOPERATION">
+				<Parameter Value="CTRL_100" />
+				<Parameter Value="DBDELETE" />
+			</Command>
+		</Action>
+		<Action Context="LISTSELECTION" Param="4">
+			<Command Name="DBOPERATION">
+				<Parameter Value="CTRL_200" />
+				<Parameter Value="DBDELETE" />
+			</Command>
+		</Action>
+		<Action Context="LISTSELECTION" Param="5">
+			<Command Name="INVOKE" Parameters="onClickMappingInfo"/>
+		</Action>
+	</Control>
+	<SplitPane Tag="1000002" XUIDoc="Two sided">
+		<Property Anchors="L-R-T-B" />
+		<Property SplitType="VERTICAL" />
+		<Property SplitResizeWeight="0.5" />
+		<Property SplitDividerSize="5" />
+		<Property SplitDividerPercLocation="0.5" />
+		<Property Col1="1" />
+		<Property Col2="2" />
+		<Property Row1="1" />
+		<Property Row2="3" />
+		<Pane Tag="1000003" XUIDoc="Debit">
+			<Property Anchors="L-R-T-B" />
+			<Property MinSizeRatio="10" />
+			<Property Size="380,400" />
+			<Property Cols="5.0, 1199.0, F" />
+			<Property Rows="5.0, 397.0" />
+			<Property BorderType="NONE" />
+			<TabbedPane Tag="10">
+				<Property Anchors="L-R-T-B" />
+				<Property Col1="1" />
+				<Property Col2="2" />
+				<Property Row1="1" />
+				<Property Row2="1" />
+				<Page Tag="1000005" Title="Gelen İşlemler">
+					<Property Size="380,400" />
+					<Property Cols="5.0, 1227.0, F" />
+					<Property Rows="5.0, 335.0, 27.0" />
+					<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+						<InlineData>
+							<InlineItem Language="TRTR" Value="Gelen İşlemler"/>
+						</InlineData>
+					</Resource>
+					<DataGrid Tag="100">
+						<Property Anchors="L-R-T-B" />
+						<Property Size="360,310" />
+						<Property HeaderColumnWidth="10" />
+						<Property GridAsRowManipulator="FALSE" />
+						<Property Message_DataRead="Okunuyor..." />
+						<Property Message_DataDelete="Siliniyor..." />
+						<Property Message_DataLocked="Seçilen kayıt bir başka kullanıcı tarafından kullanılıyor. Şimdilik bu kaydı sadece inceleyebilirsiniz. Değişiklik yapmak isterseniz bir süre sonra tekrar deneyiniz." />
+						<Property Message_DataNotAccessible="Seçilen kayıt okunamıyor. Kayıt silinmiş olabilir. Listeyi tazeledikten sonra tekrar deneyiniz. Sorun devam ederse sistem yöneticinize danışınız." />
+						<Property Message_ConfirmDataDelete="Seçilen kayıt silinecektir. Devam etmek istiyor musunuz?" />
+						<Property Message_DeleteFailure="Seçilen kayıt silinemiyor. Kayıt başka bir kullanıcı tarafından silinmiş olabilir. Listeyi tazeledikten sonra tekrar deneyiniz. Sorun devam ederse sistem yöneticinize danışınız." />
+						<Property Col1="1" />
+						<Property Col2="2" />
+						<Property Row1="1" />
+						<Property Row2="1" />
+						<Property QueryName="CQOApprovalBrowser" />
+						<Property DBEntryFormClass="Forms/CXFRecieved.lfrm" />
+						<Property DBEntryDataClass="com.lbs.data.objects.CustomBusinessObject" />
+						<Property DBEntryExtensionClass="CBOApproval" />
+						<Property ObjectClass="com.lbs.data.objects.CustomBusinessObject" />
+						<Property ExtensionClass="CBOApproval" />
+						<CustEvent onGridGetCellValue="onRecievedGridGetCellValue" />
+						<CustEvent onGridModifyQuery="onReceivedGridModifyQuery" />
+						<CustEvent onGridCanUpdateObject="onRecievedGridCanUpdateObject" />
+						<CustEvent onGridCellSelected="" />
+						<Resource Property="Message_DataRead" ListID="8802" StringTag="100"/>
+						<Resource Property="Message_DataDelete" ListID="8802" StringTag="102"/>
+						<Resource Property="Message_DataLocked" ListID="8800" StringTag="100"/>
+						<Resource Property="Message_DataNotAccessible" ListID="8800" StringTag="101"/>
+						<Resource Property="Message_ConfirmDataDelete" ListID="8801" StringTag="100"/>
+						<Resource Property="Message_DeleteFailure" ListID="8800" StringTag="107"/>
+						<Control Type="COLUMN" Tag="102" Title="Tarih" XUIDoc="Transaction date">
+							<Property ColumnWidth="80" />
+							<Property OrderName="byCardRefProcDateSign" />
+							<Property TextAlign="CENTER" />
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property InplaceEditType="DATE" />
+							<Property DataField="DATE_" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Tarih"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="COLUMN" Tag="3000031" Title="Saat">
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property InplaceEditType="TIME" />
+							<Property DataField="TIME_" />
+							<Property TimeFormat="HH_MM" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Saat"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="COLUMN" Tag="137" Title="Gönderen" XUIDoc="Option date">
+							<Property ColumnWidth="80" />
+							<Property OrderName="byOptionDate" />
+							<Property TextAlign="CENTER" />
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property DataField="SENDER" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Gönderen"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="COLUMN" Tag="3000034" Title="Gönderen Ünvanı">
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Gönderen Ünvanı"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="COLUMN" Tag="113" Title="İşlem Tipi" XUIDoc="AR/AP Code">
+							<Property ColumnWidth="80" />
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property DataField="RECTYPE" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="İşlem Tipi"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="COLUMN" Tag="126" Title="Açıklama" XUIDoc="Description">
+							<Property ColumnWidth="120" />
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property DataField="EXPLAIN_" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Açıklama"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="COLUMN" Tag="3000006" Title="Belge No">
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property DataField="DOCNR" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Belge No"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="COLUMN" Tag="3000007" Title="Belge Tarihi">
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property InplaceEditType="DATE" />
+							<Property DataField="DOCDATE" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Belge Tarihi"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="COLUMN" Tag="3000008" Title="Belge Tutarı">
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property InplaceEditType="NUMERIC" />
+							<Property DataField="DOCTOTAL" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Belge Tutarı"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="COLUMN" Tag="3000009" Title="Belge Açıklaması">
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property ColumnWidth="120" />
+							<Property DataField="DOCEXPLAIN" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Belge Açıklaması"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="COLUMN" Tag="3000010" Title="Senaryo">
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property DataField="PROFILEID" />
+							<Property ListID="70528" />
+							<TaggedList ListID="70528"/>
+						</Control>
+						<Control Type="COLUMN" Tag="3000011" Title="Gönderici Birim Etiketi">
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property DataField="GBLABEL" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Gönderici Birim Etiketi"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="COLUMN" Tag="3000013" Title="ETTN">
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property DataField="FILENAME" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="ETTN"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="COLUMN" Tag="3000035" Title="Zarf Id">
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Zarf Id"/>
+								</InlineData>
+							</Resource>
+						</Control>
+					</DataGrid>
+					<Pane Tag="3000029">
+						<Property Cols="31.0, 3.0, 26.0, 5.0, 32.0, 1059.0, F, P" />
+						<Property Rows="4.0, 20.0" />
+						<Property Col1="1" />
+						<Property Col2="2" />
+						<Property Row1="2" />
+						<Property Row2="2" />
+						<Property Anchors="L-R-B" />
+						<Property BorderType="NONE" />
+						<Control Type="BUTTON" Tag="3000030" Title="Kaydet">
+							<Property Col1="7" />
+							<Property Col2="7" />
+							<Property Row1="1" />
+							<Property Row2="1" />
+							<Property Anchors="L-R-B" />
+							<Property Size="67,21" />
+							<CustEvent onActionPerformed="onClickSaveRecieved" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Kaydet"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="IMAGEBUTTON" Tag="3000042">
+							<Property Col1="0" />
+							<Property Col2="0" />
+							<Property Row1="1" />
+							<Property Row2="1" />
+							<Property Anchors="L-T" />
+							<Property ImageID="1" />
+							<Property Size="54,20" />
+							<Property Attribute="CUSTOM" />
+							<Property ActionCommand="" />
+							<CustEvent onActionPerformed="onClickViewRecieved" />
+							<ImageObject ImageID="1" Object="DBView.png" />
+						</Control>
+						<Control Type="IMAGEBUTTON" Tag="3000043">
+							<Property Col1="2" />
+							<Property Col2="2" />
+							<Property Row1="1" />
+							<Property Row2="1" />
+							<Property Anchors="L-T" />
+							<Property ImageID="1" />
+							<Property Size="54,20" />
+							<Property Attribute="DBDELETE" />
+							<Property BoundTag="100" />
+							<ImageObject ImageID="1" Object="DBDelete.png" />
+						</Control>
+						<Control Type="MENUBUTTON" Tag="3000044">
+							<Property Col1="4" />
+							<Property Col2="4" />
+							<Property Row1="1" />
+							<Property Row2="1" />
+							<Property Anchors="L-T" />
+							<Property Size="27,20" />
+							<Property ImageID="1" />
+							<Property Resource="Eşleşme Bilgileri" />
+							<Property ListID="0" />
+							<Resource Property="Message" ListID="0" StringTag="1" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Eşleşme Bilgileri"/>
+								</InlineData>
+							</Resource>
+							<TaggedList ListID="0" ResourceType="INLINE">
+								<InlineList>
+									<Resource Property="ListID" ListID="0" StringTag="1" ResourceType="INLINE" ResourceGroup="UN">
+										<InlineData>
+											<InlineItem Language="TRTR" Value="Eşleşme Bilgileri"/>
+										</InlineData>
+									</Resource>
+								</InlineList>
+							</TaggedList>
+							<ImageObject ImageID="1" Object="DBAttachment.png" />
+							<Action Context="BUTTONCLICK" Param="1">
+								<Command Name="INVOKE" Parameters="onClickMappingInfo"/>
+							</Action>
+						</Control>
+					</Pane>
+				</Page>
+				<Page Tag="1000006" Title="Filtreler">
+					<Property Size="380,400" />
+					<Property Cols="5.0, 360.0, F" />
+					<Property Rows="5.0, 353.0, F, P, P" />
+					<Resource Property="Title" ListID="12000" StringTag="2"/>
+					<FilterGrid Tag="300">
+						<Property Anchors="L-R-T-B" />
+						<Property Size="360,350" />
+						<Property BoundTag="100" />
+						<Property HeaderColumnWidth="5" />
+						<Property HeaderRowHeight="5" />
+						<Property Col1="1" />
+						<Property Col2="2" />
+						<Property Row1="1" />
+						<Property Row2="2" />
+						<Property QueryName="CQOApprovalBrowser" />
+						<Filter Type="DATERANGE" Tag="1000040" Title="Tarih" XUIDoc="Transaction date">
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Tarih"/>
+								</InlineData>
+							</Resource>
+						</Filter>
+						<Filter Type="TIMERANGE" Tag="3000004" Title="Saat">
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Saat"/>
+								</InlineData>
+							</Resource>
+						</Filter>
+						<Filter Type="STRINGRANGE" Tag="1000041" Title="Gönderen" XUIDoc="Department">
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Gönderen"/>
+								</InlineData>
+							</Resource>
+						</Filter>
+						<Filter Type="GROUP" Tag="111051" Title="İşlem Tipi" XUIDoc="Transaction currencies">
+							<Property ApplicationID="1051" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="İşlem Tipi"/>
+								</InlineData>
+							</Resource>
+						</Filter>
+					</FilterGrid>
+					<Control Type="LABEL" Tag="1000015">
+						<Property Size="10,5" />
+						<Property Col1="1" />
+						<Property Col2="2" />
+						<Property Row1="3" />
+						<Property Row2="3" />
+					</Control>
+					<Pane Tag="3000000">
+						<Property Anchors="L-R-B" />
+						<Property ContainerHMargin="0" />
+						<Property ContainerVMargin="0" />
+						<Property BorderType="NONE" />
+						<Property Cols="0.0, P, 42.0, F, P" />
+						<Property Rows="0.0, P, P" />
+						<Property Col1="1" />
+						<Property Col2="2" />
+						<Property Row1="4" />
+						<Property Row2="4" />
+						<Control Type="IMAGEBUTTON" Tag="301" XUIDoc="Save filters">
+							<Property ImageID="10" />
+							<Property Anchors="L-B" />
+							<Property Hint="Filtre değerlerini sakla" />
+							<Property BoundTag="300" />
+							<Property Attribute="FILTERSAVE" />
+							<Property Col1="1" />
+							<Property Col2="1" />
+							<Property Row1="1" />
+							<Property Row2="2" />
+							<Resource Property="Hint" ListID="12000" StringTag="109"/>
+						</Control>
+						<Control Type="IMAGEBUTTON" Tag="302" XUIDoc="Load filters">
+							<Property ImageID="11" />
+							<Property Anchors="L-B" />
+							<Property Hint="Filtre değerlerini yükle" />
+							<Property BoundTag="300" />
+							<Property Attribute="FILTERLOAD" />
+							<Property Col1="2" />
+							<Property Col2="3" />
+							<Property Row1="1" />
+							<Property Row2="2" />
+							<Resource Property="Hint" ListID="12000" StringTag="110"/>
+						</Control>
+						<Control Type="BUTTON" Tag="303" Title="&amp;Uygula" XUIDoc="Apply filters">
+							<Property Anchors="R-B" />
+							<Property HIndent="15" />
+							<Property Attribute="FILTERAPPLY" />
+							<Property BoundTag="300" />
+							<Property Col1="4" />
+							<Property Col2="4" />
+							<Property Row1="2" />
+							<Property Row2="2" />
+							<Property Size="66,21" />
+							<Resource Property="Title" ListID="12000" StringTag="156"/>
+							<Action Context="POSTACTION">
+								<Command Name="PAGESWITCH">
+									<Parameter Value="CTRL_10" />
+									<Parameter Value="0" />
+								</Command>
+								<Command Name="SETFOCUS" Parameters="CTRL_100"/>
+							</Action>
+						</Control>
+					</Pane>
+				</Page>
+			</TabbedPane>
+		</Pane>
+		<Pane Tag="1000016" XUIDoc="Credit">
+			<Property Anchors="L-R-T-B" />
+			<Property MinSizeRatio="10" />
+			<Property Size="380,400" />
+			<Property Cols="5.0, 1237.0, F" />
+			<Property Rows="5.0, 429.0" />
+			<Property BorderType="STANDARD" />
+			<TabbedPane Tag="20">
+				<Property Anchors="L-R-T" />
+				<Property Col1="1" />
+				<Property Col2="2" />
+				<Property Row1="1" />
+				<Property Row2="1" />
+				<Page Tag="1000018" Title="Kayıtlar">
+					<Property Size="380,400" />
+					<Property Cols="5.0, 1215.0, F" />
+					<Property Rows="5.0, 252.0, 107.0, 2.0, 30.0" />
+					<Resource Property="Title" ListID="12000" StringTag="1"/>
+					<DataGrid Tag="200">
+						<Property Anchors="L-R-T-B" />
+						<Property Size="365,310" />
+						<Property HeaderColumnWidth="10" />
+						<Property GridAsRowManipulator="FALSE" />
+						<Property Col1="1" />
+						<Property Col2="2" />
+						<Property Row1="1" />
+						<Property Row2="2" />
+						<Property Message_DataRead="Okunuyor..." />
+						<Property Message_DataDelete="Siliniyor..." />
+						<Property Message_DataLocked="Seçilen kayıt bir başka kullanıcı tarafından kullanılıyor. Şimdilik bu kaydı sadece inceleyebilirsiniz. Değişiklik yapmak isterseniz bir süre sonra tekrar deneyiniz." />
+						<Property Message_DataNotAccessible="Seçilen kayıt okunamıyor. Kayıt silinmiş olabilir. Listeyi tazeledikten sonra tekrar deneyiniz. Sorun devam ederse sistem yöneticinize danışınız." />
+						<Property Message_ConfirmDataDelete="Seçilen kayıt silinecektir. Devam etmek istiyor musunuz?" />
+						<Property Message_DeleteFailure="Seçilen kayıt silinemiyor. Kayıt başka bir kullanıcı tarafından silinmiş olabilir. Listeyi tazeledikten sonra tekrar deneyiniz. Sorun devam ederse sistem yöneticinize danışınız." />
+						<Property QueryName="CQOTransactionBrowser" />
+						<Property DBEntryDataClass="com.lbs.data.objects.CustomBusinessObject" />
+						<Property DBEntryExtensionClass="CBOTransaction" />
+						<Property ObjectClass="com.lbs.data.objects.CustomBusinessObject" />
+						<Property ExtensionClass="CBOTransaction" />
+						<CustEvent onGridGetCellValue="onSendingGridGetCellValue" />
+						<CustEvent onGridCellDoubleClick="" />
+						<CustEvent onGridCanUpdateObject="onSendingGridCanUpdateObject" />
+						<CustEvent onGridCellSelected="" />
+						<Resource Property="Message_DataRead" ListID="8802" StringTag="100"/>
+						<Resource Property="Message_DataDelete" ListID="8802" StringTag="102"/>
+						<Resource Property="Message_DataLocked" ListID="8800" StringTag="100"/>
+						<Resource Property="Message_DataNotAccessible" ListID="8800" StringTag="101"/>
+						<Resource Property="Message_ConfirmDataDelete" ListID="8801" StringTag="100"/>
+						<Resource Property="Message_DeleteFailure" ListID="8800" StringTag="107"/>
+						<Control Type="COLUMN" Tag="3000014" Title="Tarih">
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property InplaceEditType="DATE" />
+							<Property DataField="DATE_STARTED" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Tarih"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="COLUMN" Tag="3000015" Title="Saat">
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property InplaceEditType="TIME" />
+							<Property DataField="TIME_STARTED" />
+							<Property TimeFormat="HH_MM" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Saat"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="COLUMN" Tag="213" Title="İşlem Tipi" XUIDoc="AR/AP Code">
+							<Property ColumnWidth="80" />
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property DataField="TRANS_TYPE" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="İşlem Tipi"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="COLUMN" Tag="3000032" Title="Kayıt Sayısı">
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property InplaceEditType="NUMERIC" />
+							<Property DataField="PACK_COUNT" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Kayıt Sayısı"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="COLUMN" Tag="3000025" Title="Alıcı TCKN/VKN">
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property DataField="CLIENTID" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Alıcı TCKN/VKN"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="COLUMN" Tag="3000026" Title="Açıklama">
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property DataField="DESCRIPTION" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Açıklama"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="COLUMN" Tag="3000033" Title="Paket Numarası">
+							<Property Editable="TRUE" />
+							<Property DispZero="FALSE" />
+							<Property HasDecimals="FALSE" />
+							<Property HasLookup="FALSE" />
+							<Property SignedNumber="FALSE" />
+							<Property DataField="TRANSID" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Paket Numarası"/>
+								</InlineData>
+							</Resource>
+						</Control>
+					</DataGrid>
+					<Pane Tag="3000037">
+						<Property Cols="31.0, 3.0, 27.0, 824.0, 175.0, F, 5.0, P" />
+						<Property Rows="26.0" />
+						<Property Col1="1" />
+						<Property Col2="2" />
+						<Property Row1="4" />
+						<Property Row2="4" />
+						<Property Anchors="L-R-B" />
+						<Property BorderType="NONE" />
+						<Property Size="1090,50" />
+						<Control Type="IMAGEBUTTON" Tag="3000038">
+							<Property Col1="0" />
+							<Property Col2="0" />
+							<Property Row1="0" />
+							<Property Row2="0" />
+							<Property Anchors="L-B" />
+							<Property ImageID="1" />
+							<Property Size="54,25" />
+							<Property Attribute="CUSTOM" />
+							<CustEvent onActionPerformed="onClickViewPackageContent" />
+							<ImageObject ImageID="1" Object="DBView.png" />
+						</Control>
+						<Control Type="IMAGEBUTTON" Tag="3000039">
+							<Property Col1="2" />
+							<Property Col2="2" />
+							<Property Row1="0" />
+							<Property Row2="0" />
+							<Property Anchors="L-B" />
+							<Property ImageID="1" />
+							<Property Size="39,25" />
+							<Property Attribute="DBDELETE" />
+							<Property BoundTag="200" />
+							<ImageObject ImageID="1" Object="DBDelete.png" />
+						</Control>
+						<Control Type="BUTTON" Tag="3000040" Title="Gönder/Al">
+							<Property Col1="5" />
+							<Property Col2="5" />
+							<Property Row1="0" />
+							<Property Row2="0" />
+							<Property Anchors="R-B" />
+							<Property BoundTag="200" />
+							<Property Size="85,21" />
+							<CustEvent onActionPerformed="onClickSendRecieve" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Gönder/Al"/>
+								</InlineData>
+							</Resource>
+						</Control>
+						<Control Type="BUTTON" Tag="3000041" Title="Kapat">
+							<Property Col1="7" />
+							<Property Col2="7" />
+							<Property Row1="0" />
+							<Property Row2="0" />
+							<Property Anchors="L-R-B" />
+							<Property BoundTag="200" />
+							<Property Size="61,21" />
+							<Property Attribute="CLOSE" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Kapat"/>
+								</InlineData>
+							</Resource>
+						</Control>
+					</Pane>
+				</Page>
+				<Page Tag="1000019" Title="Filtreler">
+					<Property Size="380,400" />
+					<Property Cols="5.0, 360.0, F" />
+					<Property Rows="5.0, 353.0, F, P, P" />
+					<Resource Property="Title" ListID="12000" StringTag="2"/>
+					<FilterGrid Tag="400">
+						<Property Anchors="L-R-T-B" />
+						<Property Size="360,350" />
+						<Property BoundTag="200" />
+						<Property HeaderColumnWidth="5" />
+						<Property HeaderRowHeight="5" />
+						<Property Col1="1" />
+						<Property Col2="2" />
+						<Property Row1="1" />
+						<Property Row2="2" />
+						<Property QueryName="CQOTransactionBrowser" />
+						<Filter Type="DATERANGE" Tag="1000020" Title="Tarih" XUIDoc="Transaction date">
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Tarih"/>
+								</InlineData>
+							</Resource>
+						</Filter>
+						<Filter Type="TIMERANGE" Tag="3000005" Title="Saat">
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="Saat"/>
+								</InlineData>
+							</Resource>
+						</Filter>
+						<Filter Type="GROUP" Tag="1000031" Title="İşlem Tipi" XUIDoc="Status">
+							<Property ListID="0" />
+							<Property FilterDefaultValues="" />
+							<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+								<InlineData>
+									<InlineItem Language="TRTR" Value="İşlem Tipi"/>
+								</InlineData>
+							</Resource>
+							<TaggedList ListID="0">
+								<InlineList>
+									<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+										<InlineData>
+											<InlineItem Language="TRTR" Value="İşlem Tipi"/>
+										</InlineData>
+									</Resource>
+								</InlineList>
+							</TaggedList>
+						</Filter>
+					</FilterGrid>
+					<Control Type="LABEL" Tag="1000029">
+						<Property Size="10,5" />
+						<Property Col1="1" />
+						<Property Col2="2" />
+						<Property Row1="3" />
+						<Property Row2="3" />
+					</Control>
+					<Pane Tag="3000001">
+						<Property Anchors="L-R-B" />
+						<Property ContainerHMargin="0" />
+						<Property ContainerVMargin="0" />
+						<Property BorderType="NONE" />
+						<Property Cols="0.0, P, 42.0, F, P" />
+						<Property Rows="0.0, P, P" />
+						<Property Col1="1" />
+						<Property Col2="2" />
+						<Property Row1="4" />
+						<Property Row2="4" />
+						<Control Type="IMAGEBUTTON" Tag="401" XUIDoc="Save filters">
+							<Property ImageID="10" />
+							<Property Anchors="L-B" />
+							<Property Hint="Filtre değerlerini sakla" />
+							<Property BoundTag="400" />
+							<Property Attribute="FILTERSAVE" />
+							<Property Col1="1" />
+							<Property Col2="1" />
+							<Property Row1="1" />
+							<Property Row2="2" />
+							<Resource Property="Hint" ListID="12000" StringTag="109"/>
+						</Control>
+						<Control Type="IMAGEBUTTON" Tag="402" XUIDoc="Load filters">
+							<Property ImageID="11" />
+							<Property Anchors="L-B" />
+							<Property Hint="Filtre değerlerini yükle" />
+							<Property BoundTag="400" />
+							<Property Attribute="FILTERLOAD" />
+							<Property Col1="2" />
+							<Property Col2="3" />
+							<Property Row1="1" />
+							<Property Row2="2" />
+							<Resource Property="Hint" ListID="12000" StringTag="110"/>
+						</Control>
+						<Control Type="BUTTON" Tag="403" Title="&amp;Uygula" XUIDoc="Apply filters">
+							<Property Anchors="R-B" />
+							<Property HIndent="15" />
+							<Property Attribute="FILTERAPPLY" />
+							<Property BoundTag="400" />
+							<Property Col1="4" />
+							<Property Col2="4" />
+							<Property Row1="2" />
+							<Property Row2="2" />
+							<Property Size="66,21" />
+							<Resource Property="Title" ListID="12000" StringTag="156"/>
+							<Action Context="POSTACTION">
+								<Command Name="PAGESWITCH">
+									<Parameter Value="CTRL_20" />
+									<Parameter Value="0" />
+								</Command>
+								<Command Name="SETFOCUS" Parameters="CTRL_200"/>
+							</Action>
+						</Control>
+					</Pane>
+				</Page>
+			</TabbedPane>
+		</Pane>
+	</SplitPane>
+	<TaggedList ListID="70528"/>
+	<TaggedList ListID="12318"/>
+	<TaggedList ListID="500000" ResourceType="PROJECT" IsFromProject="true"/>
+	<TaggedList ListID="500001" ResourceType="PROJECT" IsFromProject="true"/>
+	<TaggedList ListID="500002" ResourceType="PROJECT" IsFromProject="true"/>
+	<TaggedList ListID="0" ResourceType="INLINE">
+		<InlineList>
+			<Resource Property="ListID" ListID="0" StringTag="1" ResourceType="INLINE" ResourceGroup="UN">
+				<InlineData>
+					<InlineItem Language="TRTR" Value="İncele"/>
+					<InlineItem Language="NEUT" Value="İncele"/>
+					<InlineItem Language="ENUS" Value="View"/>
+				</InlineData>
+			</Resource>
+			<Resource Property="ListID" ListID="0" StringTag="2" ResourceType="INLINE" ResourceGroup="UN">
+				<InlineData>
+					<InlineItem Language="TRTR" Value="İncele"/>
+					<InlineItem Language="NEUT" Value="İncele"/>
+					<InlineItem Language="ENUS" Value="View"/>
+				</InlineData>
+			</Resource>
+			<Resource Property="Message" ListID="0" StringTag="3" ResourceType="INLINE">
+				<InlineData>
+					<InlineItem Language="TRTR" Value="Sil"/>
+					<InlineItem Language="NEUT" Value="Sil"/>
+					<InlineItem Language="ENUS" Value="Delete"/>
+				</InlineData>
+			</Resource>
+			<Resource Property="Message" ListID="0" StringTag="4" ResourceType="INLINE">
+				<InlineData>
+					<InlineItem Language="TRTR" Value="Sil"/>
+					<InlineItem Language="NEUT" Value="Sil"/>
+					<InlineItem Language="ENUS" Value="Delete"/>
+				</InlineData>
+			</Resource>
+		</InlineList>
+	</TaggedList>
+	<ImageObject ImageID="9" Object="Search.png" />
+	<ImageObject ImageID="10" Object="FileSave.png" />
+	<ImageObject ImageID="11" Object="FileOpen.png" />
+	<Message message-id="MATCH_PROCESS_LOCKED" />
+	<Message message-id="SOURCE_SLIP_IS_BEING_USED" />
+	<Message message-id="NO_MATCH_FOR_POS" />
+	<Message message-id="NO_MATCH_FOR_DRAFT" />
+	<Message message-id="USE_MATCH_ALL" />
+	<Message message-id="TRANSACTION_DOES_NOT_CLOSE" />
+	<Message message-id="INCOMPATIBLE_TC_TYPES" />
+</XUIForm>

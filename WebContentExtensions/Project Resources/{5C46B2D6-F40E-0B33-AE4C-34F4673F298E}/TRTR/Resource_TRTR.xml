@@ -1,0 +1,38 @@
+<TaggedLists>
+	<TaggedList LI="2" ResourceGroup="UN" ResourceType="Localizable" ListID="500000" ListName="Posta Kutusu Gelen İşlem Tipleri">
+		<ListItem Tag="111" Item="e-Fatura" Order="0" />
+		<ListItem Tag="113" Item="e-Fatura(IADE)" Order="1" />
+		<ListItem Tag="115" Item="Uygulama Yanıtı" Order="2" />
+		<ListItem Tag="119" Item="Sistem Yanıtı" Order="3" />
+	</TaggedList>
+	<TaggedList LI="8" ResourceGroup="UN" ResourceType="Localizable" ListID="500001" ListName="Posta Kutusu Giden İşlem Tipleri">
+		<ListItem Tag="1" Item="Uygulama Yanıtı" Order="0" /> 
+		<ListItem Tag="2" Item="e-Fatura" Order="1" />
+	</TaggedList>
+	<TaggedList LI="12" ResourceGroup="UN" ResourceType="Localizable" ListID="500002" ListName="Uygulama Yanıt Tipleri">
+		<ListItem Tag="1" Item="KABUL" Order="0" /> 
+		<ListItem Tag="2" Item="RED" Order="1" />
+	</TaggedList>
+	<TaggedList LI="16" ResourceGroup="UN" ResourceType="Localizable" ListID="500003" ListName="Uyarı Mesajları">
+		<ListItem Tag="1" Item="Paketlenen faturalar(UBL) posta kutusuna gönderildi." Order="1" /> 
+	</TaggedList>
+	
+	<TaggedList LI="20" ResourceGroup="UN" ResourceType="Localizable" ListID="500004" ListName="Gelen İşlemler Durum Listesi">
+		<ListItem Tag="3" Item="Kaydedilecek" Order="1" />
+		<ListItem Tag="5" Item="Kaydedildi" Order="2" /> 
+		<ListItem Tag="8" Item="Arşivlendi" Order="3" />
+		<ListItem Tag="10" Item="Rededildi" Order="4" />
+	</TaggedList>
+	<TaggedList LI="26" ResourceGroup="UN" ResourceType="Localizable" ListID="500005" ListName="Giden İşlemler Durum Listesi">
+		<ListItem Tag="3" Item="Paketlenecek" Order="1" />
+		<ListItem Tag="5" Item="Paketlendi" Order="2" />
+		<ListItem Tag="7" Item="Gönderildi" Order="3" />  
+		<ListItem Tag="8" Item="Arşivlendi" Order="4" />
+		<ListItem Tag="10" Item="Rededildi" Order="5" />
+	</TaggedList>
+	<TaggedList LI="34" ResourceGroup="UN" ResourceType="Localizable" ListID="500006" ListName="Popup Menu Listesi">
+		<ListItem Tag="1" Item="İncele" Order="1" />
+		<ListItem Tag="2" Item="Sil" Order="2" />
+	</TaggedList>
+	
+</TaggedLists> 

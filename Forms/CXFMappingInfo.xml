@@ -1,0 +1,1004 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XUIForm Tag="1000001" Title="Eşleme Bilgisi" UniqueID="CXFMatchingInfo" CustomizationEventHandler="com.acme.customization.CXEMappingInfo">
+	<Property Message_DataSave="Kaydediliyor..." />
+	<Property StatusBarSections="(message 30)(message 0)" />
+	<Property MessageIndex="1" />
+	<Property ContainerAttrib="VALIGNGROUPSCOLUMNS" />
+	<Property Cols="5.0, P, 12.0, 725.0, F" />
+	<Property Rows="5.0, 204.0, 5.0, 298.0, F, 5.0, P" />
+	<Property FormVersion="TABLELAYOUT" />
+	<Property CustFormWidth="1109" />
+	<Property CustFormHeight="606" />
+	<Property CustModal="FALSE" />
+	<Property BorderType="NONE" />
+	<CustEvent onGetFormVariableValue="onGetFormVariableValue" />
+	<CustEvent onInitialize="onInitialize" />
+	<Property ObjectClass="com.lbs.data.objects.CustomBusinessObject" />
+	<Property ExtensionClass="CBOMappingInfo" />
+	<CustEvent onModifyActionParameter="onModifyActionParameter" />
+	<Property Message_DuplicateFailure="Aynı özelliklerde başka kayıt var." />
+	<Property Message_SaveFailure="Kaydedilemedi. Sorun devam ederse sistem yöneticinize danışınız." />
+	<Resource Property="Message_DuplicateFailure" ListID="8800" StringTag="113"/>
+	<Resource Property="Message_SaveFailure" ListID="8800" StringTag="114"/>
+	<Resource Property="Message_DataSave" ListID="8802" StringTag="101"/>
+	<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+		<InlineData>
+			<InlineItem Language="TRTR" Value="Eşleme Bilgisi"/>
+		</InlineData>
+	</Resource>
+	<Group Tag="100" Title="Cari Hesap Bilgileri">
+		<Property Anchors="L-T" />
+		<Property Cols="5.0, 115.0, 153.0, P" />
+		<Property Rows="20.0, P, P, 5.0, P, 0.0, 5.0, 0.0, 0.0" />
+		<Property Col1="1" />
+		<Property Col2="1" />
+		<Property Row1="1" />
+		<Property Row2="1" />
+		<Property BevelType="GROUP" />
+		<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+			<InlineData>
+				<InlineItem Language="TRTR" Value="Cari Hesap Bilgileri"/>
+			</InlineData>
+		</Resource>
+		<Control Type="LABEL" Tag="1000006" Title="Kodu">
+			<Property Col1="1" />
+			<Property Col2="1" />
+			<Property Row1="1" />
+			<Property Row2="1" />
+			<Property Anchors="L-T" />
+			<Property LayoutY="0" />
+			<Property LayoutX="0" />
+			<Property Mandatory="TRUE" />
+			<Property Status="MANDATORY" />
+			<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+				<InlineData>
+					<InlineItem Language="TRTR" Value="Kodu"/>
+				</InlineData>
+			</Resource>
+		</Control>
+		<Control Type="COMBOEDIT" Tag="101" Title="Kodu">
+			<Property LayoutX="0" />
+			<Property LayoutY="1" />
+			<Property DataField="ArpInfo.Code" />
+			<Property Anchors="L-T" />
+			<Property Col1="2" />
+			<Property Row1="1" />
+			<Property Col2="2" />
+			<Property Row2="1" />
+			<Property Status="MANDATORY" />
+			<Control Type="TEXTEDIT" LabelTag="1000006" Tag="101" Title="" XUIDoc="Arp. Code">
+				<Property DataField="ArpInfo.Code" />
+				<Property Anchors="L-T" />
+				<Property VisibleLength="28" />
+				<Property MaxLength="50" />
+				<Property Status="MANDATORY" />
+				<Action Context="LOOKUP">
+					<LookupContract Name="SelectArpCard">
+						<ContractProp Name="Modal" Value="true" />
+						<BrowserInput Alias="input">
+							<BrowserOrder Name="byActiveCode" />
+							<SearchColumn Name="CODE" Value="${ctrl_101}" />
+						</BrowserInput>
+						<LookupOutput Alias="result" PropertyName="SelectedRecords">
+							<ParameterProperty Name="Title" Value="${ctxdata.ArpInfo.Description}" />
+							<ParameterProperty Name="Code" Value="${ctxdata.ArpInfo.Code}" />
+							<ParameterProperty Name="Reference" Value="${ctxdata.ArpRef}" />
+							<ParameterProperty Name="IDTCNo" Value="${ctxdata.ArpInfo.IDTCNo}" />
+							<ParameterProperty Name="Tax_Id" Value="${ctxdata.ArpInfo.Tax_Id}" />
+						</LookupOutput>
+					</LookupContract>
+					<Command Name="INVOKE" Parameters="processNewArp"/>
+					<Command Name="RESET">
+						<Parameter Value="CTRL_101" />
+						<Parameter Value="CTRL_102" />
+						<Parameter Value="CTRL_103" />
+					</Command>
+				</Action>
+				<Action Context="CONTROLVERIFY">
+					<Command Name="SEARCH" Message="Cari Hesap Bulunamadı ya da yetkiniz yok!" Message-id="CODE_NOT_FOUND">
+						<Parameter Value="UNQOARPCardSearch" />
+						<Parameter Value="byActiveCode" />
+						<Parameter Value="(TERM1)" />
+						<Parameter Value="(#P_CODEKEY CTRL_101)" />
+						<Parameter>
+							<PropertySet Value="(Reference ArpRef)" />
+							<PropertySet Value="(Code ArpInfo.Code)" />
+							<PropertySet Value="(Title ArpInfo.Description)" />
+							<PropertySet Value="(Tax_Id ArpInfo.Tax_Id)" />
+							<PropertySet Value="(IDTCNo ArpInfo.IDTCNo)" />
+						</Parameter>
+						<Resource Property="Message" ListID="16001" StringTag="354"/>
+					</Command>
+					<Command Name="INVOKE" Parameters="processNewArp"/>
+					<Command Name="RESET">
+						<Parameter Value="CTRL_101" />
+						<Parameter Value="CTRL_102" />
+						<Parameter Value="CTRL_103" />
+					</Command>
+				</Action>
+			</Control>
+			<Action Context="LOOKUP">
+				<LookupContract Name="SelectArpCard">
+					<ContractProp Name="Modal" Value="true" />
+					<BrowserInput Alias="input">
+						<BrowserOrder Name="byActiveCode" />
+						<SearchColumn Name="CODE" Value="${ctrl_101}" />
+					</BrowserInput>
+					<LookupOutput Alias="result" PropertyName="SelectedRecords">
+						<ParameterProperty Name="Title" Value="${ctxdata.ArpInfo.Description}" />
+						<ParameterProperty Name="Code" Value="${ctxdata.ArpInfo.Code}" />
+						<ParameterProperty Name="Reference" Value="${ctxdata.ArpRef}" />
+						<ParameterProperty Name="IDTCNo" Value="${ctxdata.ArpInfo.IDTCNo}" />
+						<ParameterProperty Name="Tax_Id" Value="${ctxdata.ArpInfo.Tax_Id}" />
+					</LookupOutput>
+				</LookupContract>
+				<Command Name="INVOKE" Parameters="processNewArp"/>
+				<Command Name="RESET">
+					<Parameter Value="CTRL_101" />
+					<Parameter Value="CTRL_102" />
+					<Parameter Value="CTRL_103" />
+				</Command>
+			</Action>
+			<Action Context="CONTROLVERIFY">
+				<Command Name="SEARCH" Message="Cari Hesap Bulunamadı ya da yetkiniz yok!" Message-id="CODE_NOT_FOUND">
+					<Parameter Value="UNQOARPCardSearch" />
+					<Parameter Value="byActiveCode" />
+					<Parameter Value="(TERM1)" />
+					<Parameter Value="(#P_CODEKEY CTRL_101)" />
+					<Parameter>
+						<PropertySet Value="(Reference ArpRef)" />
+						<PropertySet Value="(Code ArpInfo.Code)" />
+						<PropertySet Value="(Title ArpInfo.Description)" />
+						<PropertySet Value="(Tax_Id ArpInfo.Tax_Id)" />
+						<PropertySet Value="(IDTCNo ArpInfo.IDTCNo)" />
+					</Parameter>
+					<Resource Property="Message" ListID="16001" StringTag="354"/>
+				</Command>
+				<Command Name="INVOKE" Parameters="processNewArp"/>
+				<Command Name="RESET">
+					<Parameter Value="CTRL_101" />
+					<Parameter Value="CTRL_102" />
+					<Parameter Value="CTRL_103" />
+				</Command>
+			</Action>
+		</Control>
+		<Control Type="LABEL" Tag="1000007" Title="">
+			<Property Col1="1" />
+			<Property Col2="1" />
+			<Property Row1="2" />
+			<Property Row2="2" />
+			<Property Anchors="L-T" />
+			<Property LayoutY="2" />
+			<Property LayoutX="0" />
+		</Control>
+		<Control Type="TEXTEDIT" LabelTag="1000007" Tag="102" Title="" XUIDoc="Arp. Desc.">
+			<Property DataField="ArpInfo.Description" />
+			<Property Anchors="L-R-T-B" />
+			<Property MaxLength="16" />
+			<Property Status="DISABLED" />
+			<Property Col1="2" />
+			<Property Col2="2" />
+			<Property Row1="2" />
+			<Property Row2="2" />
+			<Property LayoutY="2" />
+			<Property LayoutX="1" />
+			<Property VisibleLength="50" />
+		</Control>
+		<Control Type="LABEL" Tag="1000008" Title="Vergi/Kimlik Numarası">
+			<Property Col1="1" />
+			<Property Col2="1" />
+			<Property Row1="4" />
+			<Property Row2="4" />
+			<Property Anchors="L-T" />
+			<Property LayoutY="3" />
+			<Property LayoutX="0" />
+		</Control>
+		<Control Type="TEXTEDIT" LabelTag="1000008" Tag="103" Title="Vergi/Kimlik Numarası" XUIDoc="ID">
+			<Property DataField="Sender" />
+			<Property Anchors="L-R-T-B" />
+			<Property MaxLength="16" />
+			<Property Status="DISABLED" />
+			<Property Col1="2" />
+			<Property Col2="2" />
+			<Property Row1="4" />
+			<Property Row2="4" />
+			<Property LayoutY="3" />
+			<Property LayoutX="1" />
+			<Property VisibleLength="50" />
+		</Control>
+	</Group>
+	<Group Tag="200" Title="Organizasyonel Bilgiler">
+		<Property Anchors="L-T" />
+		<Property Cols="5.0, 108.0, 153.0, P" />
+		<Property Rows="20.0, P, P, 5.0, P, P, 5.0, P, P" />
+		<Property Col1="3" />
+		<Property Col2="3" />
+		<Property Row1="1" />
+		<Property Row2="1" />
+		<Property BevelType="GROUP" />
+		<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+			<InlineData>
+				<InlineItem Language="TRTR" Value="Organizasyonel Bilgiler"/>
+			</InlineData>
+		</Resource>
+		<Control Type="LABEL" Tag="2000006" Title="İşyeri">
+			<Property Col1="1" />
+			<Property Col2="1" />
+			<Property Row1="1" />
+			<Property Row2="1" />
+			<Property Anchors="L-T" />
+			<Property LayoutY="0" />
+			<Property LayoutX="0" />
+			<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+				<InlineData>
+					<InlineItem Language="TRTR" Value="İşyeri"/>
+				</InlineData>
+			</Resource>
+		</Control>
+		<Control Type="COMBOEDIT" Tag="201" Title="İşyeri">
+			<Property LayoutX="0" />
+			<Property LayoutY="1" />
+			<Property DataField="SourceOU.Code" />
+			<Property Anchors="L-T" />
+			<Property Col1="2" />
+			<Property Row1="1" />
+			<Property Col2="2" />
+			<Property Row2="1" />
+			<Control Type="TEXTEDIT" LabelTag="2000006" Tag="201" Title="" XUIDoc="Source Org. Unit Code">
+				<Property DataField="SourceOU.Code" />
+				<Property Anchors="L-T" />
+				<Property VisibleLength="28" />
+				<Property MaxLength="50" />
+				<Action Context="LOOKUP">
+					<Command Name="LOOKUP">
+						<Parameter Value="ADXFOrgUnitBrowser%6.jfm" />
+						<Parameter Value="byCode" />
+						<Parameter Value="default" />
+						<Parameter Value="(T1 T8)" />
+						<Parameter>
+							<PropertySet Value="($P_FIRM %FV1)" />
+							<PropertySet Value="($P_TYPE %i4)" />
+							<PropertySet Value="($P_TEXTSRC CTRL_201)" />
+							<PropertySet Value="(#V_LKPCOL %sCODE)" />
+						</Parameter>
+						<Parameter Value="LOOKUP" />
+						<Parameter>
+							<PropertySet Value="(Reference OrgUnitRef)" />
+							<PropertySet Value="(Code SourceOU.Code)" />
+							<PropertySet Value="(Definition SourceOU.Definition)" />
+						</Parameter>
+					</Command>
+					<Command Name="RESET">
+						<Parameter Value="CTRL_201" />
+						<Parameter Value="CTRL_202" />
+					</Command>
+				</Action>
+				<Action Context="CONTROLVERIFY">
+					<Command Name="SEARCH" Message="Organizasyonel birim bulunamadı ya da yetkiniz yok!" Message-id="CODE_NOT_FOUND">
+						<Parameter Value="AOQOOrgUnitBrowser" />
+						<Parameter Value="byCode" />
+						<Parameter Value="(T1 T8 T101)" />
+						<Parameter>
+							<PropertySet Value="($P_FIRM %FV1)" />
+							<PropertySet Value="($P_TYPE %i4)" />
+							<PropertySet Value="(#P_AUTHKEY CTRL_201)" />
+						</Parameter>
+						<Parameter>
+							<PropertySet Value="(Reference OrgUnitRef)" />
+							<PropertySet Value="(Code SourceOU.Code)" />
+							<PropertySet Value="(Definition SourceOU.Definition)" />
+						</Parameter>
+						<Resource Property="Message" ListID="12970" StringTag="42"/>
+					</Command>
+					<Command Name="RESET">
+						<Parameter Value="CTRL_201" />
+						<Parameter Value="CTRL_202" />
+					</Command>
+				</Action>
+			</Control>
+			<Action Context="LOOKUP">
+				<Command Name="LOOKUP">
+					<Parameter Value="ADXFOrgUnitBrowser%6.jfm" />
+					<Parameter Value="byCode" />
+					<Parameter Value="default" />
+					<Parameter Value="(T1 T8)" />
+					<Parameter>
+						<PropertySet Value="($P_FIRM %FV1)" />
+						<PropertySet Value="($P_TYPE %i4)" />
+						<PropertySet Value="($P_TEXTSRC CTRL_201)" />
+						<PropertySet Value="(#V_LKPCOL %sCODE)" />
+					</Parameter>
+					<Parameter Value="LOOKUP" />
+					<Parameter>
+						<PropertySet Value="(Reference OrgUnitRef)" />
+						<PropertySet Value="(Code SourceOU.Code)" />
+						<PropertySet Value="(Definition SourceOU.Definition)" />
+					</Parameter>
+				</Command>
+				<Command Name="RESET">
+					<Parameter Value="CTRL_201" />
+					<Parameter Value="CTRL_202" />
+				</Command>
+			</Action>
+			<Action Context="CONTROLVERIFY">
+				<Command Name="SEARCH" Message="Organizasyonel birim bulunamadı ya da yetkiniz yok!" Message-id="CODE_NOT_FOUND">
+					<Parameter Value="AOQOOrgUnitBrowser" />
+					<Parameter Value="byCode" />
+					<Parameter Value="(T1 T8 T101)" />
+					<Parameter>
+						<PropertySet Value="($P_FIRM %FV1)" />
+						<PropertySet Value="($P_TYPE %i4)" />
+						<PropertySet Value="(#P_AUTHKEY CTRL_201)" />
+					</Parameter>
+					<Parameter>
+						<PropertySet Value="(Reference OrgUnitRef)" />
+						<PropertySet Value="(Code SourceOU.Code)" />
+						<PropertySet Value="(Definition SourceOU.Definition)" />
+					</Parameter>
+					<Resource Property="Message" ListID="12970" StringTag="42"/>
+				</Command>
+				<Command Name="RESET">
+					<Parameter Value="CTRL_201" />
+					<Parameter Value="CTRL_202" />
+				</Command>
+			</Action>
+		</Control>
+		<Control Type="LABEL" Tag="2000007" Title="">
+			<Property Col1="1" />
+			<Property Col2="1" />
+			<Property Row1="2" />
+			<Property Row2="2" />
+			<Property Anchors="L-T" />
+			<Property LayoutY="2" />
+			<Property LayoutX="0" />
+		</Control>
+		<Control Type="TEXTEDIT" LabelTag="2000007" Tag="202" Title="" XUIDoc="Source Org. Unit Definition">
+			<Property DataField="SourceOU.Definition" />
+			<Property Anchors="L-R-T-B" />
+			<Property MaxLength="16" />
+			<Property Status="DISABLED" />
+			<Property Col1="2" />
+			<Property Col2="2" />
+			<Property Row1="2" />
+			<Property Row2="2" />
+			<Property LayoutY="2" />
+			<Property LayoutX="1" />
+			<Property VisibleLength="50" />
+		</Control>
+		<Control Type="LABEL" Tag="2000008" Title="Ambar">
+			<Property Col1="1" />
+			<Property Col2="1" />
+			<Property Row1="4" />
+			<Property Row2="4" />
+			<Property Anchors="L-T" />
+			<Property LayoutY="3" />
+			<Property LayoutX="0" />
+			<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+				<InlineData>
+					<InlineItem Language="TRTR" Value="Ambar"/>
+				</InlineData>
+			</Resource>
+		</Control>
+		<Control Type="COMBOEDIT" Tag="203" Title="Ambar">
+			<Property LayoutX="0" />
+			<Property LayoutY="4" />
+			<Property DataField="SourceWH.Code" />
+			<Property Anchors="L-T" />
+			<Property Col1="2" />
+			<Property Row1="4" />
+			<Property Col2="2" />
+			<Property Row2="4" />
+			<Control Type="TEXTEDIT" LabelTag="2000008" Tag="203" Title="" XUIDoc="Source Warehouse Code">
+				<Property DataField="SourceWH.Code" />
+				<Property Anchors="L-T" />
+				<Property VisibleLength="28" />
+				<Property MaxLength="50" />
+				<Action Context="LOOKUP">
+					<Command Name="LOOKUP">
+						<Parameter Value="ADXFOrgUnitBrowser%4.jfm" />
+						<Parameter Value="byCode" />
+						<Parameter Value="default" />
+						<Parameter Value="(T1 T2)" />
+						<Parameter>
+							<PropertySet Value="($P_FIRM %FV1)" />
+							<PropertySet Value="($P_TYPE %i4)" />
+							<PropertySet Value="($P_TEXTSRC CTRL_203)" />
+							<PropertySet Value="(#V_LKPCOL %sCODE)" />
+						</Parameter>
+						<Parameter Value="LOOKUP" />
+						<Parameter>
+							<PropertySet Value="(Reference WHRef)" />
+							<PropertySet Value="(Code SourceWH.Code)" />
+							<PropertySet Value="(Definition SourceWH.Definition)" />
+						</Parameter>
+					</Command>
+					<Command Name="RESET">
+						<Parameter Value="CTRL_203" />
+						<Parameter Value="CTRL_204" />
+					</Command>
+				</Action>
+				<Action Context="CONTROLVERIFY">
+					<Command Name="SEARCH" Message="Ambar bulunamadı ya da yetkiniz yok!" Message-id="CODE_NOT_FOUND">
+						<Parameter Value="AOQOOrgUnitSearch" />
+						<Parameter Value="byCode" />
+						<Parameter Value="(T2 T4)" />
+						<Parameter>
+							<PropertySet Value="(#P_CODE CTRL_203)" />
+							<PropertySet Value="($P_COMPREF %FV1)" />
+							<PropertySet Value="($P_TYPE %i4)" />
+						</Parameter>
+						<Parameter>
+							<PropertySet Value="(Reference WHRef)" />
+							<PropertySet Value="(Code SourceWH.Code)" />
+							<PropertySet Value="(Definition SourceWH.Definition)" />
+						</Parameter>
+						<Resource Property="Message" ListID="12000" StringTag="505"/>
+					</Command>
+					<Command Name="RESET" Parameters="CTRL_203"/>
+					<Command Name="RESET" Parameters="CTRL_204"/>
+				</Action>
+			</Control>
+			<Action Context="LOOKUP">
+				<Command Name="LOOKUP">
+					<Parameter Value="ADXFOrgUnitBrowser%4.jfm" />
+					<Parameter Value="byCode" />
+					<Parameter Value="default" />
+					<Parameter Value="(T1 T2)" />
+					<Parameter>
+						<PropertySet Value="($P_FIRM %FV1)" />
+						<PropertySet Value="($P_TYPE %i4)" />
+						<PropertySet Value="($P_TEXTSRC CTRL_203)" />
+						<PropertySet Value="(#V_LKPCOL %sCODE)" />
+					</Parameter>
+					<Parameter Value="LOOKUP" />
+					<Parameter>
+						<PropertySet Value="(Reference WHRef)" />
+						<PropertySet Value="(Code SourceWH.Code)" />
+						<PropertySet Value="(Definition SourceWH.Definition)" />
+					</Parameter>
+				</Command>
+				<Command Name="RESET">
+					<Parameter Value="CTRL_203" />
+					<Parameter Value="CTRL_204" />
+				</Command>
+			</Action>
+			<Action Context="CONTROLVERIFY">
+				<Command Name="SEARCH" Message="Ambar bulunamadı ya da yetkiniz yok!" Message-id="CODE_NOT_FOUND">
+					<Parameter Value="AOQOOrgUnitSearch" />
+					<Parameter Value="byCode" />
+					<Parameter Value="(T2 T4)" />
+					<Parameter>
+						<PropertySet Value="(#P_CODE CTRL_203)" />
+						<PropertySet Value="($P_COMPREF %FV1)" />
+						<PropertySet Value="($P_TYPE %i4)" />
+					</Parameter>
+					<Parameter>
+						<PropertySet Value="(Reference WHRef)" />
+						<PropertySet Value="(Code SourceWH.Code)" />
+						<PropertySet Value="(Definition SourceWH.Definition)" />
+					</Parameter>
+					<Resource Property="Message" ListID="12000" StringTag="505"/>
+				</Command>
+				<Command Name="RESET" Parameters="CTRL_203"/>
+				<Command Name="RESET" Parameters="CTRL_204"/>
+			</Action>
+		</Control>
+		<Control Type="TEXTEDIT" Tag="204" Title="" XUIDoc="Source Warehouse Definition">
+			<Property DataField="SourceWH.Definition" />
+			<Property Anchors="L-R-T-B" />
+			<Property VisibleLength="30" />
+			<Property Status="DISABLED" />
+			<Property Col1="2" />
+			<Property Col2="2" />
+			<Property Row1="5" />
+			<Property Row2="5" />
+			<Property MaxLength="50" />
+			<Property LayoutY="4" />
+			<Property LayoutX="1" />
+		</Control>
+		<Control Type="LABEL" Tag="2000009" Title="Bölüm">
+			<Property Col1="1" />
+			<Property Col2="1" />
+			<Property Row1="7" />
+			<Property Row2="7" />
+			<Property Anchors="L-T" />
+			<Property LayoutY="5" />
+			<Property LayoutX="0" />
+			<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+				<InlineData>
+					<InlineItem Language="TRTR" Value="Bölüm"/>
+				</InlineData>
+			</Resource>
+		</Control>
+		<Control Type="COMBOEDIT" Tag="205" Title="Bölüm">
+			<Property LayoutX="0" />
+			<Property LayoutY="6" />
+			<Property DataField="SourceDP.Code" />
+			<Property Anchors="L-T" />
+			<Property Col1="2" />
+			<Property Row1="7" />
+			<Property Col2="2" />
+			<Property Row2="7" />
+			<Control Type="TEXTEDIT" LabelTag="2000009" Tag="205" Title="" XUIDoc="Source Department Code">
+				<Property DataField="SourceDP.Code" />
+				<Property Anchors="L-T" />
+				<Property VisibleLength="28" />
+				<Property MaxLength="50" />
+				<Action Context="LOOKUP">
+					<Command Name="LOOKUP">
+						<Parameter Value="ADXFDepartmentBrowser.jfm" />
+						<Parameter Value="byCode" />
+						<Parameter Value="default" />
+						<Parameter Value="(T1 T2)" />
+						<Parameter>
+							<PropertySet Value="($P_FIRM %FV1)" />
+							<PropertySet Value="($P_TYPE %i0)" />
+							<PropertySet Value="($P_TEXTSRC CTRL_205)" />
+							<PropertySet Value="(#V_LKPCOL %sCODE)" />
+						</Parameter>
+						<Parameter Value="LOOKUP" />
+						<Parameter>
+							<PropertySet Value="(Reference DeptRef)" />
+							<PropertySet Value="(Code SourceDP.Code)" />
+							<PropertySet Value="(Definition SourceDP.Definition)" />
+						</Parameter>
+					</Command>
+					<Command Name="RESET">
+						<Parameter Value="CTRL_205" />
+						<Parameter Value="CTRL_206" />
+					</Command>
+				</Action>
+				<Action Context="CONTROLVERIFY">
+					<Command Name="SEARCH" Message="Bölüm bulunamadı ya da yetkiniz yok!" Message-id="CODE_NOT_FOUND">
+						<Parameter Value="AOQODepartmentSearch" />
+						<Parameter Value="byCode" />
+						<Parameter Value="(T2)" />
+						<Parameter>
+							<PropertySet Value="(#P_CODE CTRL_205)" />
+							<PropertySet Value="(P_COMPREF %FV1)" />
+						</Parameter>
+						<Parameter>
+							<PropertySet Value="(Reference DeptRef)" />
+							<PropertySet Value="(Code SourceDP.Code)" />
+							<PropertySet Value="(Definition SourceDP.Definition)" />
+						</Parameter>
+						<Resource Property="Message" ListID="8818" StringTag="507"/>
+					</Command>
+					<Command Name="RESET">
+						<Parameter Value="CTRL_205" />
+						<Parameter Value="CTRL_206" />
+					</Command>
+				</Action>
+			</Control>
+			<Action Context="LOOKUP">
+				<Command Name="LOOKUP">
+					<Parameter Value="ADXFDepartmentBrowser.jfm" />
+					<Parameter Value="byCode" />
+					<Parameter Value="default" />
+					<Parameter Value="(T1 T2)" />
+					<Parameter>
+						<PropertySet Value="($P_FIRM %FV1)" />
+						<PropertySet Value="($P_TYPE %i0)" />
+						<PropertySet Value="($P_TEXTSRC CTRL_205)" />
+						<PropertySet Value="(#V_LKPCOL %sCODE)" />
+					</Parameter>
+					<Parameter Value="LOOKUP" />
+					<Parameter>
+						<PropertySet Value="(Reference DeptRef)" />
+						<PropertySet Value="(Code SourceDP.Code)" />
+						<PropertySet Value="(Definition SourceDP.Definition)" />
+					</Parameter>
+				</Command>
+				<Command Name="RESET">
+					<Parameter Value="CTRL_205" />
+					<Parameter Value="CTRL_206" />
+				</Command>
+			</Action>
+			<Action Context="CONTROLVERIFY">
+				<Command Name="SEARCH" Message="Bölüm bulunamadı ya da yetkiniz yok!" Message-id="CODE_NOT_FOUND">
+					<Parameter Value="AOQODepartmentSearch" />
+					<Parameter Value="byCode" />
+					<Parameter Value="(T2)" />
+					<Parameter>
+						<PropertySet Value="(#P_CODE CTRL_205)" />
+						<PropertySet Value="(P_COMPREF %FV1)" />
+					</Parameter>
+					<Parameter>
+						<PropertySet Value="(Reference DeptRef)" />
+						<PropertySet Value="(Code SourceDP.Code)" />
+						<PropertySet Value="(Definition SourceDP.Definition)" />
+					</Parameter>
+					<Resource Property="Message" ListID="8818" StringTag="507"/>
+				</Command>
+				<Command Name="RESET">
+					<Parameter Value="CTRL_205" />
+					<Parameter Value="CTRL_206" />
+				</Command>
+			</Action>
+		</Control>
+		<Control Type="TEXTEDIT" LabelTag="2000010" Tag="206" Title="" XUIDoc="Src Department Definition">
+			<Property DataField="SourceDP.Definition" />
+			<Property Anchors="L-R-T-B" />
+			<Property MaxLength="16" />
+			<Property Status="DISABLED" />
+			<Property Col1="2" />
+			<Property Col2="2" />
+			<Property Row1="8" />
+			<Property Row2="8" />
+			<Property LayoutY="6" />
+			<Property LayoutX="1" />
+			<Property VisibleLength="50" />
+		</Control>
+	</Group>
+	<EditGrid Tag="1000">
+		<Property Anchors="L-R-T-B" />
+		<Property Size="750,300" />
+		<Property ObjectClass="com.lbs.data.objects.CustomBusinessObject" />
+		<Property HeaderColumnWidth="10" />
+		<Property ColumnCount="5" />
+		<Property Col1="1" />
+		<Property Col2="4" />
+		<Property Row1="3" />
+		<Property Row2="4" />
+		<Property ExtensionClass="CBOMappingInfoLine" />
+		<CustEvent onGridRowInserted="onGridRowInserted" />
+		<CustEvent onGridCellInitCombo="onGridCellInitCombo" />
+		<Property DataField="MappInfoLines" />
+		<CustEvent onGridCurrentCellChange="" />
+		<CustEvent onGridCellDataChanged="onGridCellDataChanged" />
+		<CustEvent onGridCanEditRow="onGridCanEditRow" />
+		<CustEvent onGridColGetPermState="onGridGetColumnPermanentState" />
+		<CustEvent onGridCanInsertRow="onGridCanInsertRow" />
+		<CustEvent onGridCanDeleteRow="onGridCanDeleteRow" />
+		<CustEvent onGridComboFilter="onGridComboFilter" />
+		<Control Type="COLUMN" Tag="1001" Title="Durum" XUIDoc="Info">
+			<Property InplaceEditType="TEXT" />
+			<Property ColumnWidth="80" />
+			<Property Editable="TRUE" />
+			<Property DispZero="FALSE" />
+			<Property HasDecimals="FALSE" />
+			<Property HasLookup="FALSE" />
+			<Property SignedNumber="FALSE" />
+			<Property DataField="Status" />
+			<Property Status="INVISIBLE" />
+			<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+				<InlineData>
+					<InlineItem Language="TRTR" Value="Durum"/>
+				</InlineData>
+			</Resource>
+		</Control>
+		<Control Type="COLUMN" Tag="1002" Title="Gönderen" XUIDoc="Sender">
+			<Property InplaceEditType="TEXT" />
+			<Property DataField="Sender" />
+			<Property ColumnWidth="150" />
+			<Property Editable="TRUE" />
+			<Property DispZero="FALSE" />
+			<Property HasDecimals="FALSE" />
+			<Property HasLookup="FALSE" />
+			<Property SignedNumber="FALSE" />
+			<Property Status="INVISIBLE" />
+		</Control>
+		<Control Type="COLUMN" Tag="1003" Title="Tipi" XUIDoc="Type">
+			<Property InplaceEditType="COMBO" />
+			<Property DataField="CardType" />
+			<Property ColumnWidth="80" />
+			<Property Status="DISABLED" />
+			<Property Editable="TRUE" />
+			<Property DispZero="FALSE" />
+			<Property HasDecimals="FALSE" />
+			<Property HasLookup="FALSE" />
+			<Property SignedNumber="FALSE" />
+			<Property ListID="0" />
+			<TaggedList ListID="0" ResourceType="INLINE">
+				<InlineList>
+					<Resource Property="ListID" ListID="0" StringTag="0" ResourceType="INLINE" ResourceGroup="UN">
+						<InlineData>
+							<InlineItem Language="TRTR" Value="Malzeme"/>
+						</InlineData>
+					</Resource>
+				</InlineList>
+			</TaggedList>
+		</Control>
+		<Control Type="COLUMN" Tag="1004" Title="Kodu" XUIDoc="Code">
+			<Property InplaceEditType="TEXT" />
+			<Property DataField="Code" />
+			<Property ColumnWidth="120" />
+			<Property Editable="TRUE" />
+			<Property DispZero="FALSE" />
+			<Property HasDecimals="FALSE" />
+			<Property HasLookup="FALSE" />
+			<Property SignedNumber="FALSE" />
+			<Property Status="ACTIVE" />
+		</Control>
+		<Control Type="COLUMN" Tag="1005" Title="Açıklaması" XUIDoc="Description">
+			<Property InplaceEditType="TEXT" />
+			<Property ColumnWidth="150" />
+			<Property Editable="TRUE" />
+			<Property DispZero="FALSE" />
+			<Property HasDecimals="FALSE" />
+			<Property HasLookup="FALSE" />
+			<Property SignedNumber="FALSE" />
+			<Property DataField="Description" />
+			<Property Status="INVISIBLE" />
+		</Control>
+		<Control Type="COLUMN" Tag="3000007" Title="Birimi">
+			<Property Editable="TRUE" />
+			<Property DispZero="FALSE" />
+			<Property HasDecimals="FALSE" />
+			<Property HasLookup="TRUE" />
+			<Property SignedNumber="FALSE" />
+			<Property DataField="UnitCode" />
+			<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+				<InlineData>
+					<InlineItem Language="TRTR" Value="Birimi"/>
+				</InlineData>
+			</Resource>
+		</Control>
+		<Control Type="COLUMNGROUP" Tag="3000004" Title="Eşleme Bilgisi">
+			<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+				<InlineData>
+					<InlineItem Language="TRTR" Value="Eşleme Bilgisi"/>
+				</InlineData>
+			</Resource>
+		</Control>
+		<Control Type="COLUMN" Tag="1006" Title="Tipi" XUIDoc="Matching Type">
+			<Property InplaceEditType="COMBO" />
+			<Property DataField="MCardType" />
+			<Property ColumnWidth="80" />
+			<Property Editable="TRUE" />
+			<Property DispZero="FALSE" />
+			<Property HasDecimals="FALSE" />
+			<Property HasLookup="FALSE" />
+			<Property SignedNumber="FALSE" />
+			<Property ListID="12040" />
+			<Property BoundTag="3000004" />
+			<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+				<InlineData>
+					<InlineItem Language="TRTR" Value="Tipi"/>
+				</InlineData>
+			</Resource>
+			<TaggedList ListID="12040" ResourceType="INLINE"/>
+		</Control>
+		<Control Type="COLUMN" Tag="4002" Title="Kodu" XUIDoc="Matching Info">
+			<Property InplaceEditType="TEXT" />
+			<Property DataField="Item.Code" />
+			<Property HasLookup="TRUE" />
+			<Property ColumnWidth="120" />
+			<Property Editable="TRUE" />
+			<Property DispZero="FALSE" />
+			<Property HasDecimals="FALSE" />
+			<Property SignedNumber="FALSE" />
+			<Property BoundTag="3000004" />
+			<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+				<InlineData>
+					<InlineItem Language="TRTR" Value="Kodu"/>
+				</InlineData>
+			</Resource>
+		</Control>
+		<Control Type="COLUMN" Tag="3000008" Title="Açıklaması">
+			<Property Editable="FALSE" />
+			<Property DispZero="FALSE" />
+			<Property HasDecimals="FALSE" />
+			<Property HasLookup="FALSE" />
+			<Property SignedNumber="FALSE" />
+			<Property BoundTag="3000004" />
+			<Property DataField="Item.Description" />
+			<Property Status="INVISIBLE" />
+			<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+				<InlineData>
+					<InlineItem Language="TRTR" Value="Açıklaması"/>
+				</InlineData>
+			</Resource>
+		</Control>
+		<Control Type="COLUMN" Tag="3000001" Title="Birimi">
+			<Property Editable="TRUE" />
+			<Property DispZero="FALSE" />
+			<Property HasDecimals="FALSE" />
+			<Property HasLookup="FALSE" />
+			<Property SignedNumber="FALSE" />
+			<Property DataField="MUnitRef" />
+			<Property BoundTag="3000004" />
+			<Property InplaceEditType="COMBO" />
+			<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+				<InlineData>
+					<InlineItem Language="TRTR" Value="Birimi"/>
+				</InlineData>
+			</Resource>
+		</Control>
+		<Control Type="COLUMN" Tag="3000002" Title="Evrensel Kodu">
+			<Property Editable="TRUE" />
+			<Property DispZero="FALSE" />
+			<Property HasDecimals="FALSE" />
+			<Property HasLookup="FALSE" />
+			<Property SignedNumber="FALSE" />
+			<Property Status="DISABLED" />
+			<Property BoundTag="3000004" />
+			<Property DataField="MGlobUnitCode" />
+			<Resource Property="Title" ListID="0" StringTag="0" ResourceType="INLINE">
+				<InlineData>
+					<InlineItem Language="TRTR" Value="Evrensel Kodu"/>
+				</InlineData>
+			</Resource>
+		</Control>
+		<Action Context="LOOKUP" Param="3000007">
+			<LookupContract Name="SelectUnitsGlbCd">
+				<ContractProp Name="Modal" Value="true" />
+				<BrowserInput Alias="input">
+					<BrowserOrder Name="byCode" />
+					<ParameterProperty Name="GCType" Value="${2}" />
+				</BrowserInput>
+				<LookupOutput Alias="result" PropertyName="SelectedRecords">
+					<ParameterProperty Name="GCCode" Value="${ctxdata.UnitCode}" />
+				</LookupOutput>
+			</LookupContract>
+		</Action>
+		<Action Context="CONTROLVERIFY" Param="3000007">
+			<Command Name="SEARCH" Message="%RS950_133">
+				<Parameter Value="MMQOGlobalCodesBrowser" />
+				<Parameter Value="byCode" />
+				<Parameter Value="(T1 T2)" />
+				<Parameter>
+					<PropertySet Value="(#P_CODE CTRL_1000)" />
+					<PropertySet Value="($P_TYPE %i2)" />
+				</Parameter>
+				<Parameter Value="(GCCode UnitCode)" />
+				<Resource Property="Message" ListID="950" StringTag="133"/>
+			</Command>
+		</Action>
+		<Action Context="LOOKUP" Param="4002-0">
+			<LookupContract Name="SelectItemCard">
+				<ContractProp Name="Modal" Value="true" />
+				<BrowserInput Alias="input">
+					<BrowserOrder Name="byMMClassActiveCode" />
+					<SearchColumn Name="Code" Value="#{ctrl_1000}" />
+					<ParameterProperty Name="TransType" Value="${formvariable_36}" />
+					<ParameterProperty Name="Active" Value="${0}" />
+					<ParameterProperty Name="MasterItemCategory" Value="${1}" />
+					<ParameterProperty Name="WhRef" Value="${-1}" />
+				</BrowserInput>
+				<LookupOutput Alias="result" PropertyName="SelectedRecords">
+					<ParameterProperty Name="Code" Value="${ctxdata.Item.Code}" />
+					<ParameterProperty Name="Reference" Value="${ctxdata.MCardRef}" />
+					<ParameterProperty Name="UnitSetRef" Value="${ctxdata.MUnitSetRef}" />
+					<ParameterProperty Name="Description" Value="${ctxdata.Item.Description}" />
+				</LookupOutput>
+			</LookupContract>
+			<Command Name="INVOKE" Parameters="processItemChange"/>
+		</Action>
+		<Action Context="CONTROLVERIFY" Param="4002-0">
+			<Command Name="SEARCH" Message="Bu koda sahip bir malzeme bulunamadı ya da yetkiniz yok!" Message-id="CODE_NOT_FOUND">
+				<Parameter Value="UNQOMaterialItem%1" />
+				<Parameter Value="byMMClassActiveCode" />
+				<Parameter Value="(TERM1 TERM3 TERM25)" />
+				<Parameter Value="(#P_CODEKEY CTRL_1000)" />
+				<Parameter>
+					<PropertySet Value="(Reference MCardRef)" />
+					<PropertySet Value="(Code Item.Code)" />
+					<PropertySet Value="(Description Item.Description)" />
+					<PropertySet Value="(UnitSetRef MUnitSetRef)" />
+				</Parameter>
+				<Resource Property="Message" ListID="950" StringTag="1"/>
+			</Command>
+			<Command Name="INVOKE" Parameters="processItemChange"/>
+		</Action>
+		<Action Context="LOOKUP" Param="4002-6">
+			<LookupContract Name="SelectItemCard">
+				<ContractProp Name="Modal" Value="true" />
+				<BrowserInput Alias="input">
+					<BrowserOrder Name="byClassActiveCode" />
+					<SearchColumn Name="Code" Value="#{ctrl_1000}" />
+					<ParameterProperty Name="TransType" Value="${formvariable_36}" />
+					<ParameterProperty Name="Active" Value="${0}" />
+					<ParameterProperty Name="MasterItemCategory" Value="${3}" />
+					<ParameterProperty Name="WhRef" Value="${-1}" />
+				</BrowserInput>
+				<LookupOutput Alias="result" PropertyName="SelectedRecords">
+					<ParameterProperty Name="Code" Value="${ctxdata.Item.Code}" />
+					<ParameterProperty Name="Reference" Value="${ctxdata.MCardRef}" />
+					<ParameterProperty Name="UnitSetRef" Value="${ctxdata.MUnitSetRef}" />
+					<ParameterProperty Name="Description" Value="${ctxdata.Item.Description}" />
+				</LookupOutput>
+			</LookupContract>
+			<Command Name="INVOKE" Parameters="processItemChange"/>
+		</Action>
+		<Action Context="CONTROLVERIFY" Param="4002-6">
+			<Command Name="SEARCH" Message="Bu koda sahip bir malzeme bulunamadı ya da yetkiniz yok!" Message-id="CODE_NOT_FOUND">
+				<Parameter Value="UNQOMaterialItem%2" />
+				<Parameter Value="byMMClassActiveCode" />
+				<Parameter Value="(TERM1 TERM3 TERM10)" />
+				<Parameter>
+					<PropertySet Value="(#P_CODEKEY CTRL_1000)" />
+				</Parameter>
+				<Parameter>
+					<PropertySet Value="(Reference MCardRef)" />
+					<PropertySet Value="(Code Item.Code)" />
+					<PropertySet Value="(Description Item.Description)" />
+					<PropertySet Value="(UnitSetRef MUnitSetRef)" />
+				</Parameter>
+				<Resource Property="Message" ListID="950" StringTag="1"/>
+			</Command>
+			<Command Name="INVOKE" Parameters="processItemChange"/>
+		</Action>
+		<Action Context="LOOKUP" Param="4002-7">
+			<LookupContract Name="SelectItemCard">
+				<ContractProp Name="Modal" Value="true" />
+				<BrowserInput Alias="input">
+					<BrowserOrder Name="byClassActiveCode" />
+					<SearchColumn Name="Code" Value="#{ctrl_1000}" />
+					<ParameterProperty Name="TransType" Value="${formvariable_36}" />
+					<ParameterProperty Name="Active" Value="${0}" />
+					<ParameterProperty Name="MasterItemCategory" Value="${2}" />
+					<ParameterProperty Name="WhRef" Value="${-1}" />
+				</BrowserInput>
+				<LookupOutput Alias="result" PropertyName="SelectedRecords">
+					<ParameterProperty Name="Code" Value="${ctxdata.Item.Code}" />
+					<ParameterProperty Name="Reference" Value="${ctxdata.MCardRef}" />
+					<ParameterProperty Name="UnitSetRef" Value="${ctxdata.MUnitSetRef}" />
+					<ParameterProperty Name="Description" Value="${ctxdata.Item.Description}" />
+				</LookupOutput>
+			</LookupContract>
+			<Command Name="INVOKE" Parameters="processItemChange"/>
+		</Action>
+		<Action Context="CONTROLVERIFY" Param="4002-7">
+			<Command Name="SEARCH" Message="Bu koda sahip bir malzeme bulunamadı ya da yetkiniz yok!" Message-id="CODE_NOT_FOUND">
+				<Parameter Value="UNQOMaterialItem%2" />
+				<Parameter Value="byMMClassActiveCode" />
+				<Parameter Value="(TERM1 TERM3 TERM19)" />
+				<Parameter>
+					<PropertySet Value="(#P_CODEKEY CTRL_1000)" />
+				</Parameter>
+				<Parameter>
+					<PropertySet Value="(Reference MCardRef)" />
+					<PropertySet Value="(Code Item.Code)" />
+					<PropertySet Value="(Description Item.Description)" />
+					<PropertySet Value="(UnitSetRef MUnitSetRef)" />
+				</Parameter>
+				<Resource Property="Message" ListID="950" StringTag="1"/>
+			</Command>
+			<Command Name="INVOKE" Parameters="processItemChange"/>
+		</Action>
+	</EditGrid>
+	<Pane Tag="3000000">
+		<Property Anchors="R-B" />
+		<Property ContainerHMargin="0" />
+		<Property ContainerVMargin="0" />
+		<Property BorderType="NONE" />
+		<Property Cols="0.0, P, 5.0, P" />
+		<Property Rows="0.0, P" />
+		<Property Col1="3" />
+		<Property Col2="4" />
+		<Property Row1="6" />
+		<Property Row2="6" />
+		<Control Type="BUTTON" Tag="1020" Title="&amp;Kaydet">
+			<Property Anchors="R-B" />
+			<Property Attribute="SAVECLOSE" />
+			<Property Col1="1" />
+			<Property Col2="1" />
+			<Property Row1="1" />
+			<Property Row2="1" />
+			<Property Size="67,21" />
+			<Resource Property="Title" ListID="8700" StringTag="154"/>
+		</Control>
+		<Control Type="BUTTON" Tag="1021" Title="&amp;Vazgeç">
+			<Property Anchors="R-B" />
+			<Property Attribute="CLOSE" />
+			<Property Col1="3" />
+			<Property Col2="3" />
+			<Property Row1="1" />
+			<Property Row2="1" />
+			<Property Size="67,21" />
+			<Resource Property="Title" ListID="8700" StringTag="152"/>
+		</Control>
+	</Pane>
+	<Action Context="DATASAVE" Message="Alan geçerli bilgi içermelidir: ~1">
+		<Command Name="CHECK" Parameters="mandatory"/>
+		<Resource Property="Message" ListID="12000" StringTag="501"/>
+	</Action>
+	<Action Context="WINDOWCLOSE" Message="Yapılan değişiklikler kaydedilmeyecektir.">
+		<Command Name="CHECK" Parameters="dataloss"/>
+		<Resource Property="Message" ListID="12000" StringTag="502"/>
+	</Action>
+	<Action Context="WINDOWOPEN">
+		<Command Name="SETFOCUS" Parameters="CTRL_101"/>
+	</Action>
+</XUIForm>
