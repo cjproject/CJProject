@@ -1,5 +1,6 @@
 package com.acme.customization.forms;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import com.acme.customization.shared.ProjectGlobalsEInv;
@@ -218,6 +219,36 @@ public class CXEApprovalBrowser extends JLbsCustomXUIEventListener {
 		{
 			event.setReturnObject(false);
 		}
+	}
+	
+	public void onClickSaveUBLToFile(ILbsXUIPane container, Object data, IClientContext context)
+	{
+		QueryBusinessObject qbo =  m_Container.getSelectedGridData(100);
+		if(qbo == null)
+			return ;
+		String path = ProjectUtilEInv.getExportFilePath(container.getMessage(500008, 1), container.getMessage(500008, 2), "xml");
+		if (path != null)
+		{
+			try
+			{
+				byte [] LData = QueryUtil.getByteArrProp(qbo.getProperties(), "LDATA");
+				if (LData != null)
+				{
+					String lwPth = path.toLowerCase();
+					int txtP = lwPth.indexOf(".xml");
+					String filePath = (txtP > 0) ? path : path + ".xml";
+					FileOutputStream file = new FileOutputStream(filePath);
+					file.write(LData);
+					file.close();
+				}
+			}
+			catch (Exception e)
+			{
+				context.getLogger().error("Exception :", e);
+			}
+
+		}
+			
 	}
 
 }

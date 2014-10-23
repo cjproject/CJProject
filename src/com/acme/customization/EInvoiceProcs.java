@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,6 +56,9 @@ import com.acme.customization.shared.ProjectGlobalsEInv;
 import com.acme.customization.shared.ProjectUtilEInv;
 import com.acme.customization.ws.einv.Base64BinaryData;
 import com.acme.customization.ws.einv.DocumentType;
+import com.acme.customization.ws.einv.GetAppRespStatus;
+import com.acme.customization.ws.einv.GetAppRespStatusResponse;
+import com.acme.customization.ws.einv.GetApplicationResponse;
 import com.acme.customization.ws.einv.GetDocumentStatus;
 import com.acme.customization.ws.einv.GetDocumentStatusResponse;
 import com.acme.customization.ws.einv.GetInvoiceStatus;
@@ -113,6 +117,7 @@ import com.lbs.unity.mm.bo.MMEOSlipMaster;
 import com.lbs.unity.mm.bo.MMEOTransMaster;
 import com.lbs.unity.mm.client.MMTransCalculator;
 import com.lbs.util.DateUtil;
+import com.lbs.util.JLbsDateUtil;
 import com.lbs.util.JLbsFileUtil;
 import com.lbs.util.QueryUtil;
 import com.lbs.xui.JLbsXUITypes;
@@ -229,57 +234,59 @@ public class EInvoiceProcs {
 	
 	public static boolean saveSysProdResponse(LbsServerContext context, QueryBusinessObject qBO)
 	{
-		int transRef=0;
-		try 
+		boolean ok = false;
+		QueryBusinessObjects referenceRecords = new QueryBusinessObjects();
+		QueryParams params = new QueryParams();
+		params.setCustomization(ProjectGlobalsEInv.getM_ProjectGUID());
+		IQueryFactory factory = (IQueryFactory) context.getQueryFactory();
+		try
 		{
-			QueryBusinessObjects results = new QueryBusinessObjects();
-			QueryParams params = new QueryParams();
-			params.setCustomization(ProjectGlobalsEInv.getM_ProjectGUID());
 			params.getEnabledTerms().disableAll();
-			params.getEnabledTerms().enable("T_REFERENCEID");
+			params.getEnabledTerms().enable("T_ENVELOPEID");
 			params.getParameters().put("P_REFERENCEID", QueryUtil.getStringProp(qBO, "REFERENCEID"));
-			IQueryFactory factory = (IQueryFactory) m_Context.getQueryFactory();
-			factory.select("CQOApprovalBrowser", params, results, -1);
-			if(results.get(0) != null)
-			{
-				QueryBusinessObject result = results.get(0);
-				/* burda ilgili dökümaný bulup türüne göre hareket edilmeli..
-					1 .eðer faturaya istinaden geldiyse reference id' ye baðlý olan approval' ýn transrefini bul sonra tüm baðlý approvaldaki docrefleri
-					uptate et
-					2. eðer uygulama yanýtý için geldiyse ??
-					 * */
-				int recType = QueryUtil.getIntProp(result, "RECTYPE") ;
-				if(recType == ProjectGlobalsEInv.RECTYPE_SENDED_INV || recType == ProjectGlobalsEInv.RECTYPE_RECEIVED_RET_INV)
-				{
-					ArrayList<Integer> invoiceRefList = new ArrayList<Integer>();
-					invoiceRefList.add(QueryUtil.getIntegerProp(result, "DOCREF"));
-					ProjectUtilEInv.updateEInvoiceStatus(m_Context, invoiceRefList.toArray(), findStatus(QueryUtil.getIntProp(qBO, "RESPCODE")));
-				}
-				else if(recType == ProjectGlobalsEInv.RECTYPE_SENDED_PR)
-				{
-					params = new QueryParams();
-					params.getEnabledTerms().enable("T_APPROVALREF");
-					params.getParameters().put("P_APPROVALREF", QueryUtil.getIntegerProp(result, "LOGICALREF"));
-					params.getParameters().put("P_RESPCODE", QueryUtil.getIntProp(qBO, "RESPCODE"));
-					params.getParameters().put("P_EXPLAIN_", QueryUtil.getStringProp(qBO, "EXPLAIN_"));
-					params.setCustomization(ProjectGlobalsEInv.getM_ProjectGUID());
-					factory = (IQueryFactory) context.getQueryFactory();
-					try {
-						factory.executeServiceQuery("CQOUpdateaApproval", params);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-
-			}
+			ok = factory.select("CQOApprovalBrowser", params, referenceRecords, -1);
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
-		
-		return true;
+		if (ok && referenceRecords.size() > 0) {
+			for (int i = 0; i < referenceRecords.size(); i++) 
+			{
+				QueryBusinessObject referenceRecord = referenceRecords.get(i);
+				/* burda ilgili dökümaný bulup türüne göre hareket edilmeli..
+					1 .eðer faturaya istinaden geldiyse reference id' ye baðlý olan approval' ýn transrefini bul 
+					sonra tüm baðlý approvaldaki docrefleri	uptate et
+					2. eðer uygulama yanýtý için geldiyse ??
+					 * */
+				int recType = QueryUtil.getIntProp(referenceRecord, "RECTYPE") ;
+				if(recType == ProjectGlobalsEInv.RECTYPE_SENDED_INV || recType == ProjectGlobalsEInv.RECTYPE_RECEIVED_RET_INV)
+				{
+					ArrayList<Integer> invoiceRefList = new ArrayList<Integer>();
+					invoiceRefList.add(QueryUtil.getIntegerProp(referenceRecord, "DOCREF"));
+					ProjectUtilEInv.updateEInvoiceStatus(context, invoiceRefList.toArray(), findStatus(QueryUtil.getIntProp(qBO, "RESPCODE")));
+				}
+				else if(recType == ProjectGlobalsEInv.RECTYPE_SENDED_PR)
+				{
+					params = new QueryParams();
+					params.setCustomization(ProjectGlobalsEInv.getM_ProjectGUID());
+					params.getEnabledTerms().enable("T_APPROVALREF");
+					params.getParameters().put("P_APPROVALREF", QueryUtil.getIntegerProp(referenceRecord, "LOGICALREF"));
+					params.getParameters().put("P_RESPCODE", QueryUtil.getIntProp(qBO, "RESPCODE"));
+					params.getParameters().put("P_EXPLAIN_", QueryUtil.getStringProp(qBO, "EXPLAIN_"));
+					try 
+					{
+						factory.executeServiceQuery("CQOUpdateApproval", params);
+					} 
+					catch (Exception e)
+					{
+						e.printStackTrace();
+					}
+				}
+	
+			}
+		}
+		return ok;
 	}
 	
 	private static int findStatus(int respCode)
@@ -451,7 +458,7 @@ public class EInvoiceProcs {
 		
 		//set Dept.Info
 		GOBODeptAlias deptInfo = getDeptInfo(mappingInfo);
-		if (WHInfo != null)
+		if (deptInfo != null)
 		{
 			invoice.setSourceDP(deptInfo);
 			invoice.setDepartmentRef(deptInfo.getLogicalRef());
@@ -490,7 +497,7 @@ public class EInvoiceProcs {
 		
 		LOHelper.addEmptyGlobalTrans(m_Context, invoice.getTransactions(),
 				invoice.getInvoiceType(), invoice.getRC_Rate(),
-				invoice.getDivisionRef(), invoice.getCategory());
+				invoice.getDivisionRef(), invoice.getCategory(), invoice);
 		
 		int discExpType = -1;
 		BigDecimal discExpRate = UnityConstants.bZero;
@@ -792,7 +799,8 @@ public class EInvoiceProcs {
 			slipMaster = new MMEOSlipMaster();
 		MMHelper.preProcessMMTrans(m_Context, trans, dispatchType, invoice.getSourceWHRef(), invoice
 				.getSourceWH().getCode(), 0, "", invoice.getDivisionRef(), invoice.getSourceOU().getCode(), 0, "", 0,
-				invoice.getRC_Rate(), setLineCurrLC, lineCurrLC, invoice.getTCOfInvoice(), invoice.getTC_Rate(), invoice.getCategory());
+				invoice.getRC_Rate(), setLineCurrLC, lineCurrLC, invoice.getTCOfInvoice(), invoice.getTC_Rate(), 
+				invoice.getCategory(), invoice);
 		
 		trans.setFCOfTrans(invoice.getTCOfInvoice());
 		trans.setFCRateTrans(invoice.getTC_Rate());
@@ -901,8 +909,11 @@ public class EInvoiceProcs {
 				root.appendChild(cbcProfileID);
 				
 				Element cbcID = applicationResponse.createElement("cbc:ID");
-				cbcID.appendChild(applicationResponse.createTextNode( ProjectUtilEInv.generateGUID()));
-						//LOHelper.requestNumberForLOInvoice(m_Context, invoice, true, false, null)));
+				LOBOInvoice requestDNInv = new LOBOInvoice();
+				requestDNInv.setEInvoice(1);
+				requestDNInv.setInvoiceType(UnityConstants.INVC_WHOLESALE);
+				String docNr = LOHelper.requestNumberForLOInvoice(m_Context, requestDNInv,  true, false, null);
+				cbcID.appendChild(applicationResponse.createTextNode(docNr));
 				root.appendChild(cbcID);
 				
 							
@@ -912,11 +923,16 @@ public class EInvoiceProcs {
 				root.appendChild(cbcUUID);
 				
 				
+				Calendar now = Calendar.getInstance();
 				Element cbcIssueDate = applicationResponse.createElement("cbc:IssueDate");
-				cbcIssueDate.appendChild(applicationResponse.createTextNode(getIssueDate(Calendar.getInstance())));
+				cbcIssueDate.appendChild(applicationResponse.createTextNode(getIssueDate(now)));
 				root.appendChild(cbcIssueDate);
 				
 				//TODO issuetime tagi eklenebilir..
+				
+				Element cbcIssueTime = applicationResponse.createElement("cbc:IssueTime");
+				cbcIssueTime.appendChild(applicationResponse.createTextNode(getIssueTime((now))));
+				root.appendChild(cbcIssueTime);
 
 				// cac:Signature
 				Element cacSignature = applicationResponse.createElement("cac:Signature");
@@ -1007,7 +1023,7 @@ public class EInvoiceProcs {
 				cacDocumentReference.appendChild(docRefCbcID);
 				
 				Element docRefIssueDate = applicationResponse.createElement("cbc:IssueDate");
-				docRefIssueDate.appendChild(applicationResponse.createTextNode(getIssueDate(Calendar.getInstance())));
+				docRefIssueDate.appendChild(applicationResponse.createTextNode(getIssueDate(now)));
 				cacDocumentReference.appendChild(docRefIssueDate);
 				
 				//QUESTION8 BURAYI NASIL DEGERLENDIRIYORUZ ? kalsýn fatura olarak deðgistir
@@ -1075,19 +1091,19 @@ public class EInvoiceProcs {
 				//m_ArpInfo = (FIBOConnectArpInfo) UnityHelper.getBOByReference(m_Context, FIBOConnectArpInfo.class, invoice.getARPRef());
 				//m_OrgUnit = findAndGetOrgUnit(invoice.getDivisionRef());	
 				
-				Calendar now = DateUtil.getToday();
-				//ProjectUtilEInv.setMemberValue(approvalBO, "DocNr", "");
+				ProjectUtilEInv.setMemberValue(approvalBO, "DocNr", docNr);
 				//ProjectUtilEInv.setMemberValue(approvalBO, "GenExp", m_ArpInfo.getDescription());
+				ProjectUtilEInv.setMemberValue(approvalBO, "Time_",  now.getTimeInMillis());JLbsDateUtil.truncateDate(now);
 				ProjectUtilEInv.setMemberValue(approvalBO, "Date_", now);
-				ProjectUtilEInv.setMemberValue(approvalBO, "Time_",  now.getTimeInMillis());
 				ProjectUtilEInv.setMemberValue(approvalBO, "RecType", ProjectGlobalsEInv.RECTYPE_SENDED_PR);
 				ProjectUtilEInv.setMemberValue(approvalBO, "EnvelopeType", ProjectGlobalsEInv.ENVELOPE_TYPE_POSTBOX);
 				ProjectUtilEInv.setMemberValue(approvalBO, "Status", ProjectGlobalsEInv.STATUS_PACKED_OR_SAVED);
-				ProjectUtilEInv.setMemberValue(approvalBO, "Sender", getNodeTextByTagName(approvalDocument, "cac:AccountingCustomerParty", "cbc:ID"));
+				ProjectUtilEInv.setMemberValue(approvalBO, "Sender", getNodeTextByTagName(approvalDocument, "cac:AccountingSupplierParty", "cbc:ID"));
 				ProjectUtilEInv.setMemberValue(approvalBO, "FileName", GUID);
 				ProjectUtilEInv.setMemberValue(approvalBO, "OpType", ProjectGlobalsEInv.OPTYPE_OUTGOING);
 				ProjectUtilEInv.setMemberValue(approvalBO, "ProfileID", ProjectGlobalsEInv.PROFILE_ID_COMMERCIAL);
-				//ProjectUtilEInv.setMemberValue(approvalBO, "PKLabel", );
+				ProjectUtilEInv.setMemberValue(approvalBO, "PKLabel", getNodeTextByTagName(approvalDocument, "sh:Sender", "sh:Identifier"));
+				ProjectUtilEInv.setMemberValue(approvalBO, "GBLabel", getNodeTextByTagName(approvalDocument, "sh:Receiver", "sh:Identifier"));
 				//ProjectUtilEInv.setMemberValue(approvalBO, "DocDate", invoice.getInvoiceDate());
 				//ProjectUtilEInv.setMemberValue(approvalBO, "DocTotal", invoice.getTotalNet());
 				ProjectUtilEInv.setMemberValue(approvalBO, "Explain_", message);
@@ -1528,87 +1544,97 @@ public class EInvoiceProcs {
 			params.getParameters().put("P_STATUS", ProjectGlobalsEInv.TRANSACTION_STATUS_WILL_BE_SEND);
 			IQueryFactory factory = (IQueryFactory) m_Context.getQueryFactory();
 			factory.select("CQOTransactionBrowser", params, results, -1);
-		
-
-			int oldTransRef = 0;
-			//her bir paketi gönderiyor
-			for (int i = 0; i < results.size(); i++)
-			{
-				QueryBusinessObject qbo = results.get(i);
-				int transRef =  QueryUtil.getIntProp(qbo, "LOGICALREF");
-				if (oldTransRef != 0 && oldTransRef == transRef)
-					continue;
-				
-				byte[] LData = null;
-				try 
-				{
-				   LData = qbo.getProperties().getByteArray("LDATA");
-				}
-				catch (Exception e1) 
-				{
-				   e1.printStackTrace();
-				}
-				if (LData != null && LData.length > 0)
-				{
-					
-					//paketler ziplenip mi gönderilmeli ?
-					
-					///evet
-					DocumentType docType = new DocumentType();
-					docType.setFileName(QueryUtil.getStringProp(qbo, "FILENAME")+".zip");
-					Base64BinaryData data = new Base64BinaryData();
-					DataHandler handler = new DataHandler(new ByteArrayDataSource(LData, "application/octet-stream"));
-					data.setValue(handler);
-					docType.setBinaryData(data);
-					/*send invoice ya da send application resposnse*/
-					boolean ok  = false;
-				 	if (QueryUtil.getIntProp(qbo, "TRANS_TYPE") == ProjectGlobalsEInv.TRANSACTION_TYPE_EINV)
-				 	{
-				 		SendInvoice sendInvoice = new SendInvoice();
-				 		sendInvoice.setSessionID(m_SessionID);
-						sendInvoice.setInvoice(docType);
-						sendInvoice.setAlias(m_ArpInfo.getPkurn());
-						SendInvoiceResponse result = m_Service.sendInvoice(sendInvoice);
-					 	ok = result.getSendInvoiceResult();
-				 		int status = ok ? ProjectGlobalsEInv.EINV_STATUS_GIBE_GONDERILDI : ProjectGlobalsEInv.EINV_STATUS_GIBE_GONDERILEMEDI; 
-				 		ProjectUtilEInv.updateEInvoiceStatus(m_Context, findInvoiceRefs(results, transRef), status);
-				 	}
-				 	else if (QueryUtil.getIntProp(qbo, "TRANS_TYPE") == ProjectGlobalsEInv.TRANSACTION_TYPE_APPRESP)
-				 	{
-				 		SendApplicationResponse sendAppResp = new SendApplicationResponse();
-				 		//sendAppResp.setAppResp(docType);
-				 		SendApplicationResponseResponse result = m_Service.sendApplicationResponse(sendAppResp);
-				 		ok = result.getSendApplicationResponseResult();
-				 	}
-				 	if (ok)
-				 	{
-				 		updateTransactionStatus(transRef, ProjectGlobalsEInv.TRANSACTION_STATUS_SENT);
-				 		updateApprovalStatus(transRef, ProjectGlobalsEInv.STATUS_SENT);
-				 		sendedPackSize++;
-				 	}
-				 	//ilgili faturanýn durumunu gönderildi yap.
-				 	// gönderildekten sonra transactionlarýn gridde listelenmemesi için ne yapmak lazým ?
-						//status degistýr	
-				}
-					
-			}
 		}
-		catch(AxisFault ex)
-		{
-			ex.printStackTrace();
-		}
-		catch (Exception e)
+		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
-		finally
-		{
-			m_SendRecieveStrList.add(ProjectUtilEInv.dateToString(Calendar.getInstance(), "HH:mm:ss")+ 
-					" Gönderilen paket sayýsý:"+ sendedPackSize);
-			m_SendRecieveStrList.add(ProjectUtilEInv.dateToString(Calendar.getInstance(), "HH:mm:ss")+
-					" Gönderilemeyen paket sayýsý:"+ (results.size()-sendedPackSize));
-		}
 		
+
+		int oldTransRef = 0;
+		//her bir paketi gönderiyor
+		for (int i = 0; i < results.size(); i++)
+		{
+			QueryBusinessObject qbo = results.get(i);
+			int transRef =  QueryUtil.getIntProp(qbo, "LOGICALREF");
+			if (oldTransRef != 0 && oldTransRef == transRef)
+				continue;
+			
+			byte[] LData = null;
+			try 
+			{
+			   LData = qbo.getProperties().getByteArray("LDATA");
+			}
+			catch (Exception e1) 
+			{
+			   e1.printStackTrace();
+			}
+			if (LData != null && LData.length > 0)
+			{
+				
+				//paketler ziplenip mi gönderilmeli ?
+				
+				///evet
+				DocumentType docType = new DocumentType();
+				docType.setFileName(QueryUtil.getStringProp(qbo, "FILENAME")+".zip");
+				Base64BinaryData data = new Base64BinaryData();
+				DataHandler handler = new DataHandler(new ByteArrayDataSource(LData, "application/octet-stream"));
+				data.setValue(handler);
+				docType.setBinaryData(data);
+				/*send invoice ya da send application resposnse*/
+				boolean ok  = false;
+			 	if (QueryUtil.getIntProp(qbo, "TRANS_TYPE") == ProjectGlobalsEInv.TRANSACTION_TYPE_EINV)
+			 	{
+			 		SendInvoice sendInvoice = new SendInvoice();
+			 		sendInvoice.setSessionID(m_SessionID);
+					sendInvoice.setInvoice(docType);
+					sendInvoice.setAlias(QueryUtil.getStringProp(qbo, "PKLABEL"));
+					SendInvoiceResponse result = new SendInvoiceResponse();
+					try 
+					{
+						result = m_Service.sendInvoice(sendInvoice);
+					}
+					catch (RemoteException e) 
+					{
+						e.printStackTrace();
+					}
+				 	ok = result.getSendInvoiceResult();
+			 		int status = ok ? ProjectGlobalsEInv.EINV_STATUS_GIBE_GONDERILDI : ProjectGlobalsEInv.EINV_STATUS_GIBE_GONDERILEMEDI; 
+			 		ProjectUtilEInv.updateEInvoiceStatus(m_Context, findInvoiceRefs(results, transRef), status);
+			 	}
+			 	else if (QueryUtil.getIntProp(qbo, "TRANS_TYPE") == ProjectGlobalsEInv.TRANSACTION_TYPE_APPRESP)
+			 	{
+			 		SendApplicationResponse sendAppResp = new SendApplicationResponse();
+			 		sendAppResp.setSessionID(m_SessionID);
+			 		sendAppResp.setAlias(QueryUtil.getStringProp(qbo, "PKLABEL"));
+			 		sendAppResp.setAppResp(docType);
+			 		SendApplicationResponseResponse result = new SendApplicationResponseResponse();
+					try 
+					{
+						result = m_Service.sendApplicationResponse(sendAppResp);
+					}
+					catch (RemoteException e)
+					{
+						e.printStackTrace();
+					}
+			 		ok = result.getSendApplicationResponseResult();
+			 	}
+			 	if (ok)
+			 	{
+			 		updateTransactionStatus(transRef, ProjectGlobalsEInv.TRANSACTION_STATUS_SENT);
+			 		updateApprovalStatus(transRef, ProjectGlobalsEInv.STATUS_SENT);
+			 		sendedPackSize++;
+			 	}
+			 	//ilgili faturanýn durumunu gönderildi yap.
+			 	// gönderildekten sonra transactionlarýn gridde listelenmemesi için ne yapmak lazým ?
+					//status degistýr	
+			}
+				
+		}
+		m_SendRecieveStrList.add(ProjectUtilEInv.dateToString(Calendar.getInstance(), "HH:mm:ss")+ 
+				" Gönderilen paket sayýsý:"+ sendedPackSize);
+		m_SendRecieveStrList.add(ProjectUtilEInv.dateToString(Calendar.getInstance(), "HH:mm:ss")+
+				" Gönderilemeyen paket sayýsý:"+ (results.size()-sendedPackSize));
 	}
 	
 	private static void updateApprovalStatus(int transRef,	int status)
@@ -1795,49 +1821,137 @@ public class EInvoiceProcs {
 	/* recievedocument (bu false olana kadar devam) sonra recievedone*/
 	private void recieve()
 	{
+		updateSendedEnvelopeID();
+		ReceiveDocument reciveDocument = new ReceiveDocument();
+		reciveDocument.setSessionID(m_SessionID);
+		ReceiveDocumentResponse recieveDocResp = new ReceiveDocumentResponse();
 		try
 		{
-			/*GetInvoiceStatus invStatus = new GetInvoiceStatus();
-			invStatus.setSessionID(m_SessionID);
-			invStatus.setUuid("59A803AF-E346-4D83-A25B-23B2DD0C064B");
-			GetInvoiceStatusResponse invStatusResp = m_Service.getInvoiceStatus(invStatus);*/
-			
-			
-			ReceiveDocument reciveDocument = new ReceiveDocument();
-			reciveDocument.setSessionID(m_SessionID);
-			ReceiveDocumentResponse recieveDocResp = m_Service.receiveDocument(reciveDocument);
-			while(recieveDocResp.getReceiveDocumentResult())
-			{
-				m_SendRecieveStrList.add(ProjectUtilEInv.dateToString(Calendar.getInstance(), "HH:mm:ss")+ " Gelen iþlemler alýnýyor...");
-			 	DocumentType docType = recieveDocResp.getDocument();
-			 	Base64BinaryData binaryData = docType.getBinaryData();
-			 	InputStream inputStream = binaryData.getValue().getInputStream();
-			 	File recievedZipFile = writeStreamContentsToTempFile(inputStream,
-			 			docType.getFileName().substring(0, docType.getFileName().lastIndexOf(".")));
-			 	//gelen zipin filename i kullan..
-			 	ReceiveDone recieveDone = new ReceiveDone();
-			 	recieveDone.setSessionID(m_SessionID);
-			 	recieveDone.setFileID(docType.getFileName());
-			 	m_Service.receiveDone(recieveDone);
-			 	unZipFileAndPersistApprovals(recievedZipFile);
-			 	
-			 	reciveDocument = new ReceiveDocument();
-				reciveDocument.setSessionID(m_SessionID);
-				recieveDocResp = m_Service.receiveDocument(reciveDocument);
-				
-			}
-		 	
-		}
-		catch (Exception e)
+			recieveDocResp = m_Service.receiveDocument(reciveDocument);
+		} 
+		catch (Exception e) 
 		{
 			e.printStackTrace();
 		}
-		finally
+		while(recieveDocResp.getReceiveDocumentResult())
 		{
-			m_SendRecieveStrList.add(ProjectUtilEInv.dateToString(Calendar.getInstance(), "HH:mm:ss")+ " Alýnan iþlem sayýsý:"+ m_ReceivedCnt);
+			try 
+			{
+				m_SendRecieveStrList.add(ProjectUtilEInv.dateToString(Calendar.getInstance(), "HH:mm:ss")+ " Gelen iþlemler alýnýyor...");
+				DocumentType docType = recieveDocResp.getDocument();
+				Base64BinaryData binaryData = docType.getBinaryData();
+				InputStream inputStream = binaryData.getValue().getInputStream();
+				File recievedZipFile = writeStreamContentsToTempFile(inputStream,
+						docType.getFileName().substring(0, docType.getFileName().lastIndexOf(".")));
+				//gelen zipin filename i kullan..
+				ReceiveDone recieveDone = new ReceiveDone();
+				recieveDone.setSessionID(m_SessionID);
+				recieveDone.setFileID(docType.getFileName());
+				m_Service.receiveDone(recieveDone);
+				unZipFileAndPersistApprovals(recievedZipFile);
+				
+				reciveDocument = new ReceiveDocument();
+				reciveDocument.setSessionID(m_SessionID);
+				recieveDocResp = m_Service.receiveDocument(reciveDocument);
+			}
+			catch (Exception e)
+			{
+			    e.printStackTrace();
+			}
+			
 		}
+	 	
+		m_SendRecieveStrList.add(ProjectUtilEInv.dateToString(Calendar.getInstance(), "HH:mm:ss")+ " Alýnan iþlem sayýsý:"+ m_ReceivedCnt);
 	}
 	
+	
+	private void updateSendedEnvelopeID()
+	{
+		boolean ok = false;
+		QueryBusinessObjects results = new QueryBusinessObjects();
+		try 
+		{
+			QueryParams params = new QueryParams();
+			params.setCustomization(ProjectGlobalsEInv.getM_ProjectGUID());
+			params.getEnabledTerms().disableAll();
+			params.getEnabledTerms().enable("T_ENVIDNULL");
+			params.getEnabledTerms().enable("T_OPTYPE");
+			params.getParameters().put("P_OPTYPE", ProjectGlobalsEInv.OPTYPE_SEND);
+			IQueryFactory factory = (IQueryFactory) m_Context.getQueryFactory();
+			ok = factory.select("CQOApprovalBrowser", params, results, -1);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		if (ok && results.size() > 0)
+		{
+			//GetDocumentStatus docStatus = new GetDocumentStatus();
+			//docStatus.setDocType(-1);
+			for (int i = 0; i < results.size(); i++)
+			{
+				QueryBusinessObject result = results.get(i);
+				String Uuid = QueryUtil.getStringProp(result, "FILENAME");
+				if(Uuid == null || Uuid.length() == 0)
+					continue;
+				int recType = QueryUtil.getIntProp(result, "RECTYPE") ;
+				String envelopeId = null;
+				if(recType == ProjectGlobalsEInv.RECTYPE_SENDED_INV || recType == ProjectGlobalsEInv.RECTYPE_RECEIVED_RET_INV)
+				{
+					GetInvoiceStatus invStatus = new GetInvoiceStatus();
+					invStatus.setSessionID(m_SessionID);
+					invStatus.setUuid(Uuid);
+					GetInvoiceStatusResponse invStatusResponse = new GetInvoiceStatusResponse();
+					try 
+					{
+						invStatusResponse = m_Service.getInvoiceStatus(invStatus);
+					} 
+					catch (RemoteException e) 
+					{
+						e.printStackTrace();
+					}
+					envelopeId = invStatusResponse.getEnvelopeId();
+				}
+				else if(recType ==  ProjectGlobalsEInv.RECTYPE_SENDED_PR)
+				{
+					GetAppRespStatus appRespStatus = new GetAppRespStatus();
+					appRespStatus.setSessionID(m_SessionID);
+					appRespStatus.setUuid(Uuid);
+					GetAppRespStatusResponse appRespStatusResponse = new GetAppRespStatusResponse();
+					try
+					{
+						appRespStatusResponse = m_Service.getAppRespStatus(appRespStatus);
+					} 
+					catch (RemoteException e)
+					{
+						e.printStackTrace();
+					}
+					envelopeId = appRespStatusResponse.getEnvelopeId();
+				}
+				
+				if(envelopeId == null || envelopeId.length() == 0)
+						continue;
+					QueryParams params = new QueryParams();
+					params.getMainTableParams().getEnabledColumns().enable("ENVELOPEID");
+					params.getEnabledTerms().enable("T_APPROVALREF");
+					params.getParameters().put("P_ENVELOPEID", envelopeId);
+					params.getParameters().put("P_APPROVALREF", Integer.valueOf(QueryUtil.getIntProp(result, "LOGICALREF")));
+					params.setCustomization(ProjectGlobalsEInv.getM_ProjectGUID());
+					IQueryFactory factory = (IQueryFactory) m_Context.getQueryFactory();
+					try 
+					{
+						factory.executeServiceQuery("CQOUpdateApproval", params);
+					} 
+					catch (Exception e) 
+					{
+						e.printStackTrace();
+					}
+				}
+				
+		}
+				
+	}
 	
 	/*QUESTION5
 	 * Sistem yanýtýný approval' a kaydederken REFERENCEID alanýna yanýt alýnan paketin ID' sini yazýyorum. (Paket satýrý olmadýðý için
@@ -1880,10 +1994,11 @@ public class EInvoiceProcs {
 		ProjectUtilEInv.setMemberValue(approvalBO, "EnvelopeType", envType);
 		ProjectUtilEInv.setMemberValue(approvalBO, "TrCode", findTrCode(element, envType));
 		ProjectUtilEInv.setMemberValue(approvalBO, "DocRef", 0);
+		setDocumentProperties(doc, approvalBO);
 		ProjectUtilEInv.setMemberValue(approvalBO, "OpType", ProjectGlobalsEInv.OPTYPE_INCOMING);
 		ProjectUtilEInv.setMemberValue(approvalBO, "ProfileID", findProfileID(element, envType));
-		ProjectUtilEInv.setMemberValue(approvalBO, "GBLabel", getNodeTextByTagName(doc, "sh:Sender", "sh:Identifier"));
-		ProjectUtilEInv.setMemberValue(approvalBO, "PKLabel", getNodeTextByTagName(doc, "sh:Receiver", "sh:Identifier"));
+		ProjectUtilEInv.setMemberValue(approvalBO, "PKLabel", getNodeTextByTagName(doc, "sh:Sender", "sh:Identifier"));
+		ProjectUtilEInv.setMemberValue(approvalBO, "GBLabel", getNodeTextByTagName(doc, "sh:Receiver", "sh:Identifier"));
 		ProjectUtilEInv.setMemberValue(approvalBO, "Explain_", getNodeTextByTagName(element, "cac:LineResponse", "cbc:Description"));
 		ProjectUtilEInv.setMemberValue(approvalBO, "RespCode", getNodeTextByTagName(element, "cac:LineResponse", "cbc:ResponseCode"));
 		ProjectUtilEInv.setMemberValue(approvalBO, "ReferenceID", getNodeTextByTagName(element, "cac:DocumentReference", "cbc:ID"));
@@ -1895,6 +2010,22 @@ public class EInvoiceProcs {
 		ProjectUtilEInv.setMemberValue(approvalBO, "LData", ProjectUtilEInv.documentToByte(source, transformer));
 		if(ProjectUtilEInv.persistCBO(m_Context, approvalBO));
 			m_ReceivedCnt++;
+	}
+	
+	private static void setDocumentProperties(Document document, CustomBusinessObject approvalBO)
+	{
+		if (document.getElementsByTagName("cbc:ID").item(0) != null)
+		{
+			ProjectUtilEInv.setMemberValue(approvalBO, "DocNr", document.getElementsByTagName("cbc:ID").item(0).getTextContent());
+		}
+		if (document.getElementsByTagName("cbc:IssueDate").item(0) != null)
+		{
+			ProjectUtilEInv.setMemberValue(approvalBO, "DocDate", 
+					ProjectUtilEInv.stringToDate(document.getElementsByTagName("cbc:IssueDate").item(0).getTextContent(), ""));
+		}
+		ProjectUtilEInv.setMemberValue(approvalBO, "DocTotal",
+				new BigDecimal(getNodeTextByTagName(document, "cac:LegalMonetaryTotal", "cbc:TaxInclusiveAmount")));
+		
 	}
 	
 	
@@ -2219,6 +2350,11 @@ public class EInvoiceProcs {
 			root.appendChild(cacAccountingCustomerParty);
 			cacAccountingCustomerParty.appendChild(createParty(invoiceXML, ACCOUNTING_TYPE_CUSTOMER));
 			
+			//cac:AllowanceCharge
+			Element invoiceAllowanceCharge = getInvoiceAllowanceCharge(invoiceXML);
+			if (invoiceAllowanceCharge != null)
+				root.appendChild(invoiceAllowanceCharge);
+			
 			//cac:TaxTotal
 			root.appendChild(createTaxTotals(invoiceXML));
 			
@@ -2256,10 +2392,6 @@ public class EInvoiceProcs {
 			cbcPayableAmount.appendChild(invoiceXML.createTextNode(getStringOfValue(m_Invoice.getTotalNet())));
 			cacLegalMonetaryTotal.appendChild(cbcPayableAmount);
 			
-			
-			Element invoiceAllowanceCharge = getInvoiceAllowanceCharge(invoiceXML);
-			if (invoiceAllowanceCharge != null)
-				root.appendChild(invoiceAllowanceCharge);
 			
 			int transactionsSize = m_Invoice.getTransactions().size();
 			//cac:InvoiceLine
@@ -2337,7 +2469,8 @@ public class EInvoiceProcs {
 				ProjectUtilEInv.setMemberValue(approvalBO, "DocRef", m_Invoice.getInternal_Reference());
 				ProjectUtilEInv.setMemberValue(approvalBO, "OpType", getOpType());
 				ProjectUtilEInv.setMemberValue(approvalBO, "ProfileID", m_Invoice.getProfileId());
-				ProjectUtilEInv.setMemberValue(approvalBO, "PKLabel", m_OrgUnit.getPkurn());
+				ProjectUtilEInv.setMemberValue(approvalBO, "PKLabel", m_ArpInfo.getPkurn());
+				ProjectUtilEInv.setMemberValue(approvalBO, "GBLabel", m_ArpInfo.getGburn());
 				ProjectUtilEInv.setMemberValue(approvalBO, "DocDate", m_Invoice.getInvoiceDate());
 				ProjectUtilEInv.setMemberValue(approvalBO, "DocTotal", m_Invoice.getTotalNet());
 				ProjectUtilEInv.setMemberValue(approvalBO, "DocExplain", BUHelper.byteArrToString(m_Invoice.getNotes()!= null ? m_Invoice.getNotes().getDocument():null));
@@ -2417,6 +2550,7 @@ public class EInvoiceProcs {
 				cacAllowanceCharge.appendChild(cbcChargeIndicator);
 				
 				Element cbcAmount  = invoiceXML.createElement("cbc:Amount");
+				cbcAmount.setAttribute("currencyID", "TRL");
 				cbcAmount.appendChild(invoiceXML.createTextNode(getStringOfValue(trans.getTotal())));
 				cacAllowanceCharge.appendChild(cbcAmount);
 			}
@@ -2575,7 +2709,7 @@ public class EInvoiceProcs {
 			ProjectUtilEInv.setMemberValue(transaction, "DocType", docType);
 			ProjectUtilEInv.setMemberValue(transaction, "RecCount", transType == ProjectGlobalsEInv.TRANSACTION_TYPE_EINV ?  m_InvoicesCBO.size() : 1);
 			ProjectUtilEInv.setMemberValue(transaction, "ClientId", getTransactionClientID(approvalDoc, transType));
-			ProjectUtilEInv.setMemberValue(transaction, "Alias_", m_ArpInfo !=null ? m_ArpInfo.getPkurn() : "");
+			ProjectUtilEInv.setMemberValue(transaction, "Alias_", getTransactionAlias(approvalDoc, transType));
 			ProjectUtilEInv.setMemberValue(transaction, "LData", LData);
 
 			try 
@@ -2587,6 +2721,20 @@ public class EInvoiceProcs {
 				e.printStackTrace();
 			}
 	 }
+
+	private static Object getTransactionAlias(Document approvalDoc,
+			int transType)
+	{
+		if (transType == ProjectGlobalsEInv.TRANSACTION_TYPE_EINV)
+			return m_ArpInfo != null ? m_ArpInfo.getPkurn() : "";
+		else if (transType == ProjectGlobalsEInv.TRANSACTION_TYPE_APPRESP) 
+		{
+			return getNodeTextByTagName(approvalDoc, "sh:Sender", "sh:Identifier");
+		}
+			 
+		return "";
+	}
+
 
 	private static String getTransactionClientID(Document approvalDoc, int transType) 
 	{
@@ -3320,6 +3468,16 @@ public class EInvoiceProcs {
 		if (date != null)
 		{
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			return dateFormat.format(date.getTime());
+		}
+		return "";
+	}
+	
+	private static String getIssueTime(Calendar date)
+	{
+		if (date != null)
+		{
+			SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 			return dateFormat.format(date.getTime());
 		}
 		return "";

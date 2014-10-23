@@ -66,22 +66,15 @@ public class CXEMappingInfo extends JLbsXUIAdapter{
 			m_FromPostBox = true;
 		if(m_Container.getMode() == JLbsXUITypes.XUIMODE_DBENTRY)
 		{
-			ProjectUtilEInv.setMemberValue(mappingInfo, "Sender", "");
-			ProjectUtilEInv.setMemberValue(mappingInfo, "ArpRef", 0);
-			ProjectUtilEInv.setMemberValue(mappingInfo, "OrgUnitRef", 0);
-			ProjectUtilEInv.setMemberValue(mappingInfo, "WHRef", 0); 
-			ProjectUtilEInv.setMemberValue(mappingInfo, "DeptRef", 0);
-			ProjectUtilEInv.setMemberValue(mappingInfo, "ArpInfo", new UNBOARPReference());
-			ProjectUtilEInv.setMemberValue(mappingInfo, "SourceDP", new GOBODeptAlias());
-			ProjectUtilEInv.setMemberValue(mappingInfo, "SourceOU", new GOBOOrgUnitAlias());
-			ProjectUtilEInv.setMemberValue(mappingInfo, "SourceWH", new GOBOOrgUnitAlias());
-			
+			setMappInfoProperties(mappingInfo);
 			CustomBusinessObjects mappInfoLines = (CustomBusinessObjects)ProjectUtilEInv.getMemberValue(mappingInfo, "MappInfoLines");
 			CustomBusinessObject mappInfoLine = ProjectUtilEInv.createNewCBO("CBOMappingInfoLine");
 			mappInfoLines.add(setMappInfoLineProperties(mappInfoLine));
 		}
 		else
 		{
+			if (ProjectUtilEInv.getBOIntFieldValue(mappingInfo, "LogicalRef") == 0)
+				setMappInfoProperties(mappingInfo);
 			CustomBusinessObjects mappInfoLines = (CustomBusinessObjects)ProjectUtilEInv.getMemberValue(mappingInfo, "MappInfoLines");
 			for(int i=0; i< mappInfoLines.size();i++)
 			{
@@ -90,7 +83,7 @@ public class CXEMappingInfo extends JLbsXUIAdapter{
 					ProjectUtilEInv.setMemberValue(mappInfoLine, "Item", new MMBOItemLink());
 				if (ProjectUtilEInv.getMemberValue(mappInfoLine, "Units") == null)
 					ProjectUtilEInv.setMemberValue(mappInfoLine, "Units", new BusinessObjects<MMBOUomDefinition>());
-				CustomBusinessObjects units = (CustomBusinessObjects) ProjectUtilEInv.getMemberValue(mappInfoLine, "Units");
+				BusinessObjects units = (BusinessObjects) ProjectUtilEInv.getMemberValue(mappInfoLine, "Units");
 				fillUnitList(units.toArray(), mappInfoLine, ProjectUtilEInv.getBOIntFieldValue(mappInfoLine, "MUnitRef"));
 			}
 		}
@@ -101,6 +94,20 @@ public class CXEMappingInfo extends JLbsXUIAdapter{
 	{
 		//
 		
+	}
+	
+	private CustomBusinessObject setMappInfoProperties(CustomBusinessObject mappingInfo)
+	{
+		ProjectUtilEInv.setMemberValue(mappingInfo, "Sender", "");
+		ProjectUtilEInv.setMemberValue(mappingInfo, "ArpRef", 0);
+		ProjectUtilEInv.setMemberValue(mappingInfo, "OrgUnitRef", 0);
+		ProjectUtilEInv.setMemberValue(mappingInfo, "WHRef", 0); 
+		ProjectUtilEInv.setMemberValue(mappingInfo, "DeptRef", 0);
+		ProjectUtilEInv.setMemberValue(mappingInfo, "ArpInfo", new UNBOARPReference());
+		ProjectUtilEInv.setMemberValue(mappingInfo, "SourceDP", new GOBODeptAlias());
+		ProjectUtilEInv.setMemberValue(mappingInfo, "SourceOU", new GOBOOrgUnitAlias());
+		ProjectUtilEInv.setMemberValue(mappingInfo, "SourceWH", new GOBOOrgUnitAlias());
+		return mappingInfo;
 	}
 
 	private CustomBusinessObject setMappInfoLineProperties(CustomBusinessObject mappInfoLine)

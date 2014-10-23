@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.swing.JFileChooser;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.soap.MessageFactory;
@@ -90,12 +91,33 @@ import com.lbs.xui.customization.JLbsXUIControlEvent;
 import com.lbs.xui.customization.JLbsXUIEventBase;
 import com.lbs.xui.customization.JLbsXUIGridEvent;
 import com.lbs.unity.UnityConstants;
+import com.lbs.unity.UnityFileExtFilter;
 import com.lbs.unity.UnityHelper;
 import com.lbs.unity.bo.UNEORecInfo;
 import com.lbs.data.grids.JLbsQuerySelectionGrid;
 
 public class ProjectUtilEInv
 {
+	
+	public static String getExportFilePath(String dlgTitle, String fltDesc, String extension)
+	{
+		JFileChooser dialog = new JFileChooser("");
+		dialog.setDialogTitle(dlgTitle);
+		String[] gExts = new String[] { extension };
+		UnityFileExtFilter filter = new UnityFileExtFilter(gExts);
+		filter.setDescription(fltDesc);
+		dialog.setFileFilter(filter);
+
+		int returnVal = dialog.showSaveDialog(null);
+		if (returnVal == JFileChooser.APPROVE_OPTION)
+		{
+			File f = dialog.getSelectedFile();
+			String fPath = f.getAbsolutePath();
+			return fPath;
+		}
+
+		return null;
+	}
 	
 	public static File createTempFile(String fileName, String extension)
 	{
@@ -752,10 +774,9 @@ public class ProjectUtilEInv
 	}
 	public static void warn(JLbsXUIEventBase event, String msg)
 	{
-		JLbsXUIPane container = event.getContainer();
-		container.messageDialog(msg, null);
+		event.getClientContext().showMessage("", msg);
 	}
-	public static boolean Confirm(JLbsXUIEventBase event, String msg)
+	/*public static boolean Confirm(JLbsXUIEventBase event, String msg)
 	{
 		JLbsXUIPane container = event.getContainer();
 		return container.confirmed(msg);
@@ -765,7 +786,7 @@ public class ProjectUtilEInv
 	{
 		JLbsXUIPane container = event.getContainer();
 		container.messageDialog(msg, list);
-	}
+	}*/
 	public static CustomBusinessObject readObject(JLbsXUIControlEvent event, String BOName, int BORef)
 	{
 		JLbsXUIPane container = event.getContainer();
@@ -887,7 +908,7 @@ public class ProjectUtilEInv
 
 		return numDays;
 	}
-	public static void showFormParameters(JLbsXUIControlEvent event)
+/*	public static void showFormParameters(JLbsXUIControlEvent event)
 	{
 		JLbsXUIPane container = event.getContainer();
 		Object data = container.getData();
@@ -936,7 +957,7 @@ public class ProjectUtilEInv
 			warn(event, "Form data: " + data.toString());
 		}
 	}
-	
+	*/
 	public static Object getBOFieldValue(Object bo, String fieldName)
 	{
 		//BusinessObject bObject = (BusinessObject) bo;

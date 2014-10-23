@@ -2,6 +2,8 @@ package com.acme.customization.forms;
 
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 import com.acme.customization.shared.ProjectGlobalsEInv;
 import com.acme.customization.shared.ProjectUtilEInv;
 import com.lbs.contract.ContractParameter;
@@ -29,6 +31,18 @@ public class CXEInvoicesBrowser {
 	private static IApplicationContext m_Context = null;
 	
 
+	
+	public void onPopupMenuAction(JLbsXUIControlEvent event)
+	{
+		/** onPopupMenuAction : This method is called when user selects any item in the form's popup menu. Event parameter object (JLbsXUIControlEvent) contains form object in 'container' and 'component' properties, form data object in 'data' property, selected popup item's id value in 'index' and 'tag' properties, and selected popup item object (JLbsPopupMenuItem) in 'ctxData' property. This method is expected to execute the action corresponding to the selected popup menu item. No return value is expected. */
+		if (event.getIndex() == 100) 
+		{
+			sendEInvoiceToPostBox(event.getContainer(), event.getData(), event.getClientContext());
+		}
+	}
+	
+	
+	
 	public void sendEInvoiceToPostBox(ILbsXUIPane container, Object data, IClientContext context)
 	{
 		if (m_TransGrid != null && m_TransGrid.getMultiSelectionList() != null && m_TransGrid.getMultiSelectionList().size() > 0)
@@ -51,7 +65,7 @@ public class CXEInvoicesBrowser {
 				try
 				{
 					context.callRemoteMethod("EInvoiceProcs", "sendEInvoices", new Object[]{null, invoiceRefList});
-					container.getContext().showMessage("", container.getMessage(500003, 1));
+					JOptionPane.showMessageDialog(null, container.getMessage(500003, 1));
 				}
 				catch (Exception e)
 				{
@@ -129,5 +143,5 @@ public class CXEInvoicesBrowser {
 
 		return okay;
 	}
-	
+
 }

@@ -204,6 +204,7 @@ public class CXEEDocument {
 		else if (m_RecType == ProjectGlobalsEInv.RECTYPE_RECEIVED_SR
 				|| m_RecType == ProjectGlobalsEInv.RECTYPE_RECEIVED_PR)
 			saveSysProdResponse(event);
+		event.getContainer().saveDataAndClose();
 	}
 	
 	private void saveSysProdResponse(JLbsXUIControlEvent event)
@@ -212,6 +213,10 @@ public class CXEEDocument {
 		{
 			RemoteMethodResponse response = event.getClientContext().callRemoteMethod("EInvoiceProcs", "saveSysProdResponse",
 							new Object[] { null, m_QueryBO });
+			if (((Boolean) response.Result).booleanValue())
+				ProjectUtilEInv.updateApprovalStatus(event.getClientContext(),
+						QueryUtil.getIntegerProp(m_QueryBO, "LOGICALREF"),
+						ProjectGlobalsEInv.STATUS_PACKED_OR_SAVED);
 		} 
 		catch (Exception e) 
 		{

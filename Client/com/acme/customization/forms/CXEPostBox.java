@@ -1,5 +1,6 @@
 package com.acme.customization.forms;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,6 +24,7 @@ import org.w3c.dom.NodeList;
 import com.acme.customization.shared.ProjectGlobalsEInv;
 import com.acme.customization.shared.ProjectUtilEInv;
 import com.lbs.data.grids.JLbsQueryGrid;
+import com.lbs.data.grids.JLbsQuerySelectionGrid;
 import com.lbs.data.objects.BusinessObjects;
 import com.lbs.data.objects.CustomBusinessObject;
 import com.lbs.data.objects.CustomBusinessObjects;
@@ -30,6 +32,7 @@ import com.lbs.data.query.QueryBuilderCopyHandler;
 import com.lbs.data.query.QueryBusinessObject;
 import com.lbs.data.query.QueryParams;
 import com.lbs.grid.interfaces.ILbsQueryGrid;
+import com.lbs.grids.JLbsObjectListGrid;
 import com.lbs.remoteclient.IClientContext;
 import com.lbs.transport.RemoteMethodResponse;
 import com.lbs.unity.UnityConstants;
@@ -68,6 +71,10 @@ public class CXEPostBox {
 	public void onClickSendRecieve(JLbsXUIControlEvent event)
 	{
 		m_Container.openChild("Forms/CXFSendRecieve.lfrm",	null, true, JLbsXUITypes.XUIMODE_DEFAULT);
+		JLbsQuerySelectionGrid recivedGrid = (JLbsQuerySelectionGrid) event.getContainer().getComponentByTag(GRID_TAG_RECIEVED);
+		JLbsQuerySelectionGrid sendingGrid = (JLbsQuerySelectionGrid) event.getContainer().getComponentByTag(GRID_TAG_SENDING);
+		recivedGrid.queryParamsChanged();
+		sendingGrid.queryParamsChanged();
 	}
 
 	/*
@@ -79,25 +86,28 @@ public class CXEPostBox {
 	public void onClickSaveRecieved(JLbsXUIControlEvent event)
 	{
 		
-		/*CustomBusinessObject approvalBO = ProjectUtilEInv.createNewCBO("CBOApproval");
+		CustomBusinessObject approvalBO = ProjectUtilEInv.createNewCBO("CBOApproval");
 		approvalBO._setState(CustomBusinessObject.STATE_NEW);
 		Calendar now = DateUtil.getToday();
 		ProjectUtilEInv.setMemberValue(approvalBO, "Date_", ProjectUtilEInv.getToday(now));
 		ProjectUtilEInv.setMemberValue(approvalBO, "Time_",  now.getTimeInMillis());
-		ProjectUtilEInv.setMemberValue(approvalBO, "RecType", ProjectGlobalsEInv.RECTYPE_RECEIVED_INV);
+		ProjectUtilEInv.setMemberValue(approvalBO, "RecType", ProjectGlobalsEInv.RECTYPE_RECEIVED_SR);
 		ProjectUtilEInv.setMemberValue(approvalBO, "Status", 0);
-		ProjectUtilEInv.setMemberValue(approvalBO, "Sender", "9999999999");
+		ProjectUtilEInv.setMemberValue(approvalBO, "Sender", "1234567808");
 		//FileName ve EnvelopeID alanlarýna gelen döküman türüne göre xml' de hangi alana bakýlmalý ? 
-		ProjectUtilEInv.setMemberValue(approvalBO, "FileName", "TICARI_FATURA_ZARF");
-		ProjectUtilEInv.setMemberValue(approvalBO, "EnvelopeID", "TICARI_FATURA_ZARF");
-		ProjectUtilEInv.setMemberValue(approvalBO, "EnvelopeType", ProjectGlobalsEInv.ENVELOPE_TYPE_SENDER);
-		ProjectUtilEInv.setMemberValue(approvalBO, "TrCode", 1);
+		ProjectUtilEInv.setMemberValue(approvalBO, "FileName", "74472467-65e3-4e52-ac9f-ef367e8967fc");
+		ProjectUtilEInv.setMemberValue(approvalBO, "EnvelopeID", "Tc8330dd2-a6df-4335-9ec7-3c62a73a35ca");
+		ProjectUtilEInv.setMemberValue(approvalBO, "EnvelopeType", ProjectGlobalsEInv.ENVELOPE_TYPE_SYSTEM);
+		ProjectUtilEInv.setMemberValue(approvalBO, "TrCode", 0);
 		ProjectUtilEInv.setMemberValue(approvalBO, "DocRef", 0);
 		ProjectUtilEInv.setMemberValue(approvalBO, "OpType", ProjectGlobalsEInv.OPTYPE_INCOMING);
-		ProjectUtilEInv.setMemberValue(approvalBO, "ProfileID", 2);
+		ProjectUtilEInv.setMemberValue(approvalBO, "ProfileID", 0);
+		ProjectUtilEInv.setMemberValue(approvalBO, "ReferenceID", "b2fcc68f-edb6-489d-999f-2c2cc303b8df");
+		ProjectUtilEInv.setMemberValue(approvalBO, "RespCode", "1200");
+		ProjectUtilEInv.setMemberValue(approvalBO, "Explain_", "BASARIYLA ISLENDI");
 
 		String tmpDir = JLbsFileUtil.getTempDirectory();
-		String xmlFileName = tmpDir + "TICARI_FATURA_ZARF.XML";
+		String xmlFileName = tmpDir + "SISTEM_YANITI_MERKEZ.XML";
 		byte[] fileContents = null;
 		try {
 			fileContents = JLbsFileUtil.readFile(xmlFileName);
@@ -107,13 +117,14 @@ public class CXEPostBox {
 		}
 		ProjectUtilEInv.setMemberValue(approvalBO, "LData", fileContents);
 		
-		ProjectUtilEInv.persistCBO(event.getClientContext(), approvalBO);*/
+		ProjectUtilEInv.persistCBO(event.getClientContext(), approvalBO);
 		
 		ILbsQueryGrid recievedGrid = (ILbsQueryGrid) m_Container.getComponentByTag(100);
 		QueryBusinessObject qbo = (QueryBusinessObject) recievedGrid.getSelectedObject();
-		if(qbo == null)
-			return ;
-		else
+		if (qbo == null)
+			return;
+		else if (QueryUtil.getIntProp(qbo, "RECTYPE") == ProjectGlobalsEInv.RECTYPE_RECEIVED_INV
+				|| QueryUtil.getIntProp(qbo, "RECTYPE") == ProjectGlobalsEInv.RECTYPE_RECEIVED_RET_INV)
 			checkAndOpenMappingInfo(qbo);
 		try 
 		{
@@ -226,7 +237,7 @@ public class CXEPostBox {
 			event.setReturnObject(false);
 		else if(focusCtrlTag == GRID_TAG_RECIEVED && (event.getIndex() == 2 || event.getIndex() == 4))
 			event.setReturnObject(false);
-		else if(focusCtrlTag == GRID_TAG_SENDING && (event.getIndex() == 1 || event.getIndex() == 3))
+		else if(focusCtrlTag == GRID_TAG_SENDING && (event.getIndex() == 1 || event.getIndex() == 3 || event.getId() == 6))
 			event.setReturnObject(false);
 	}
 
@@ -250,6 +261,38 @@ public class CXEPostBox {
 			return ;
 		checkAndOpenMappingInfo(qbo);
 	}
+	
+	public void onClickSaveUBLToFile(ILbsXUIPane container, Object data, IClientContext context)
+	{
+		QueryBusinessObject qbo = (QueryBusinessObject) container.getSelectedGridData(GRID_TAG_RECIEVED);
+		if(qbo == null)
+			return ;
+		String path = ProjectUtilEInv.getExportFilePath(container.getMessage(500008, 1), container.getMessage(500008, 2), "xml");
+		if (path != null)
+		{
+			try
+			{
+				byte [] LData = QueryUtil.getByteArrProp(qbo.getProperties(), "LDATA");
+				if (LData != null)
+				{
+					String lwPth = path.toLowerCase();
+					int txtP = lwPth.indexOf(".xml");
+					String filePath = (txtP > 0) ? path : path + ".xml";
+					FileOutputStream file = new FileOutputStream(filePath);
+					file.write(LData);
+					file.close();
+				}
+			}
+			catch (Exception e)
+			{
+				context.getLogger().error("Exception :", e);
+			}
+
+		}
+			
+	}
+	
+	
 	
 	private void checkAndOpenMappingInfo(QueryBusinessObject qbo) 
 	{
