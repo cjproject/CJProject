@@ -493,7 +493,7 @@
      */
     public PostBoxServiceStub(org.apache.axis2.context.ConfigurationContext configurationContext) throws org.apache.axis2.AxisFault {
         
-                    this(configurationContext,"https://pbtest.diyalogo.com.tr/PostBoxService.svc" );
+                    this(configurationContext,"https://merkeztest.diyalogo.com.tr/PostBoxService.svc" );
                 
     }
 
@@ -502,7 +502,7 @@
      */
     public PostBoxServiceStub() throws org.apache.axis2.AxisFault {
         
-                    this("https://pbtest.diyalogo.com.tr/PostBoxService.svc" );
+                    this("https://merkeztest.diyalogo.com.tr/PostBoxService.svc" );
                 
     }
 
@@ -7282,7 +7282,7 @@
         }
         return false;
     }
-     //https://pbtest.diyalogo.com.tr/PostBoxService.svc
+     //https://merkeztest.diyalogo.com.tr/PostBoxService.svc
             private  org.apache.axiom.om.OMElement  toOM(com.acme.customization.ws.einv.GetInvoice param, boolean optimizeContent)
             throws org.apache.axis2.AxisFault {
 

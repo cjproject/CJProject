@@ -5,6 +5,33 @@ public class ProjectGlobalsEInv
 {	
 	private static String m_ProjectGUID = "{5C46B2D6-F40E-0B33-AE4C-34F4673F298E}";
 	
+	public static final int MAPPING_TYPE_RECEIVED = 0;
+	public static final int MAPPING_TYPE_SENDED = 1;
+	
+	public static final int ITEM_MAPPING_UBL_FIELD_CODE = 1;
+	public static final int ITEM_MAPPING_UBL_FIELD_DESCRIPTION = 2;
+	public static final int ITEM_MAPPING_UBL_FIELD_BUYER = 3;
+	public static final int ITEM_MAPPING_UBL_FIELD_SELLER = 4;
+	public static final int ITEM_MAPPING_UBL_FIELD_MANUFACTURER = 5;
+	public static final int ITEM_MAPPING_UBL_FIELD_BRAND = 6;
+	public static final int ITEM_MAPPING_UBL_FIELD_MODEL = 7;
+	public static final int ITEM_MAPPING_UBL_FIELD_NOTE = 8;
+	
+	public static final int ITEM_MAPPING_SEARCH_FIELD_CODE = 1;
+	public static final int ITEM_MAPPING_SEARCH_FIELD_DESCRIPTION = 2;
+	public static final int ITEM_MAPPING_SEARCH_FIELD_PRODUCER = 3;
+	public static final int ITEM_MAPPING_SEARCH_FIELD_ITEMARPCODE = 4;
+	public static final int ITEM_MAPPING_SEARCH_FIELD_BARCODE = 5;
+	public static final int ITEM_MAPPING_SEARCH_FIELD_GTIPCODE = 6;
+	public static final int ITEM_MAPPING_SEARCH_FIELD_BRAND = 7;
+	public static final int ITEM_MAPPING_SEARCH_FIELD_AUXCODE1 = 8;
+	public static final int ITEM_MAPPING_SEARCH_FIELD_AUXCODE2 = 9;
+	public static final int ITEM_MAPPING_SEARCH_FIELD_AUXCODE3 = 10;
+	public static final int ITEM_MAPPING_SEARCH_FIELD_AUXCODE4 = 11;
+	public static final int ITEM_MAPPING_SEARCH_FIELD_AUXCODE5 = 12;
+	
+	
+	
 	
 	public static final int EINV_STATUS_GIBE_GONDERILECEK = 0;
 	public static final int EINV_STATUS_MUHURDE_ONAYDA = 1;
@@ -75,6 +102,20 @@ public class ProjectGlobalsEInv
 	public static final int OPTYPE_INCOMING = 1;
 	
 	public static final int MAPPING_CARD_TYPE_ITEM = 0;
+	public static final int MAPPING_CARD_TYPE_PROMOTION = 1;
+	public static final int MAPPING_CARD_TYPE_DISCOUNT_SALES = 2;
+	public static final int MAPPING_CARD_TYPE_EXPENSE_SALES = 3;
+	public static final int MAPPING_CARD_TYPE_SERVICE_SALES = 4;
+	public static final int MAPPING_CARD_TYPE_DEPOSIT = 5;
+	public static final int MAPPING_CARD_TYPE_FIXEDASSET = 8;
+	public static final int MAPPING_CARD_TYPE_ITEMCLASS = 10;
+	public static final int MAPPING_CARD_TYPE_SET = 16;
+	public static final int MAPPING_CARD_TYPE_SETITEM = 17;
+	public static final int MAPPING_CARD_TYPE_DISCOUNT_PURCH = 22;
+	public static final int MAPPING_CARD_TYPE_EXPENSE_PURCH = 33;
+	public static final int MAPPING_CARD_TYPE_SERVICE_PURCH = 44;
+	
+	
 
 	public static String getM_ProjectGUID()
 	

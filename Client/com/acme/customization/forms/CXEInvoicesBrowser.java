@@ -54,7 +54,8 @@ public class CXEInvoicesBrowser {
 				QueryBusinessObject qbo = (QueryBusinessObject) qId.getAssociatedData();
 				if (QueryUtil.getIntProp(qbo, "Status") != UnityConstants.INVSTAT_APPROVED
 						//|| QueryUtil.getIntProp(qbo, "EInvoice") != 1
-						|| QueryUtil.getIntProp(qbo, "EInvoiceStatus") != ProjectGlobalsEInv.EINV_STATUS_GIBE_GONDERILECEK
+						|| (QueryUtil.getIntProp(qbo, "EInvoiceStatus") != ProjectGlobalsEInv.EINV_STATUS_GIBE_GONDERILECEK && QueryUtil
+								.getIntProp(qbo, "EInvoiceStatus") != ProjectGlobalsEInv.EINV_STATUS_GIBDE_ISLENEMEDI)
 						||  !checkInvoiceType(QueryUtil.getIntProp(qbo, "InvoiceType")))
 					continue;
 				
@@ -66,6 +67,7 @@ public class CXEInvoicesBrowser {
 				{
 					context.callRemoteMethod("EInvoiceProcs", "sendEInvoices", new Object[]{null, invoiceRefList});
 					JOptionPane.showMessageDialog(null, container.getMessage(500003, 1));
+					UnityHelper.dataGridRefreshAndLocate(m_TransGrid, ((Integer)invoiceRefList.get(0)).intValue());
 				}
 				catch (Exception e)
 				{
@@ -73,6 +75,7 @@ public class CXEInvoicesBrowser {
 				}
 
 			}
+			
 				
 		}
 		

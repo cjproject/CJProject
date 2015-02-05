@@ -1,6 +1,7 @@
 package com.acme.customization.forms;
 
 import com.acme.customization.shared.ProjectUtilEInv;
+import com.lbs.controls.JLbsCheckBox;
 import com.lbs.data.objects.CustomBusinessObject;
 import com.lbs.util.QueryUtil;
 import com.lbs.xui.customization.JLbsXUIControlEvent;
@@ -18,6 +19,8 @@ public class CXEConnParam {
 
 	public void onInitialize(JLbsXUIControlEvent event)
 	{
+		JLbsCheckBox signCheckBox = (JLbsCheckBox) event.getContainer().getComponentByTag(2000012);
+		signCheckBox.setSelected(true);
 		m_Data = (CustomBusinessObject) event.getData();
 		m_ConnParamRef = QueryUtil.getIntProp(ProjectUtilEInv.getConnParamRecord(event.getClientContext()), "LOGICALREF");  
 		if (m_ConnParamRef == 0)
@@ -44,6 +47,7 @@ public class CXEConnParam {
 			ProjectUtilEInv.setMemberValue(m_Data, "LoginUrl", ProjectUtilEInv.getMemberValue(connParamBO, "LoginUrl"));
 			ProjectUtilEInv.setMemberValue(m_Data, "ProxyServer", ProjectUtilEInv.getMemberValue(connParamBO, "ProxyServer"));
 			ProjectUtilEInv.setMemberValue(m_Data, "LoginPassword", ProjectUtilEInv.getMemberValue(connParamBO, "LoginPassword"));
+			m_Data.setKeyPropertyName("LogicalRef");
 		}
 		
 	}

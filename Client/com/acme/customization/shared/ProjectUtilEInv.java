@@ -40,8 +40,11 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.acme.customization.UBLItemInfo;
 import com.google.gwt.thirdparty.guava.common.io.Files;
+import com.lbs.admin.bo.GOBOGTIPCode;
 import com.lbs.appobjects.GOBOOrgUnit;
+import com.lbs.appobjects.GOBOOrgUnitAlias;
 import com.lbs.appobjects.GOConstants;
 import com.lbs.appobjects.LbsUserLoginInfo;
 import com.lbs.data.database.DBConnection;
@@ -94,10 +97,295 @@ import com.lbs.unity.UnityConstants;
 import com.lbs.unity.UnityFileExtFilter;
 import com.lbs.unity.UnityHelper;
 import com.lbs.unity.bo.UNEORecInfo;
+import com.lbs.unity.mm.bo.MMBOItem;
+import com.lbs.unity.mm.bo.MMBOItemARPAsg;
+import com.lbs.unity.mm.bo.MMBOItemARPAsgs;
+import com.lbs.unity.mm.bo.MMBOItemBrandAndModel;
+import com.lbs.unity.ss.bo.SSBOBrand;
 import com.lbs.data.grids.JLbsQuerySelectionGrid;
 
 public class ProjectUtilEInv
 {
+	
+	public static int checkMappedItemList(ArrayList mappedItemList, String fieldCode, int fieldType) 
+	{
+		for(int i=0; i<mappedItemList.size();i++)
+		{
+			UBLItemInfo mappedItemInfo = (UBLItemInfo) mappedItemList.get(i);
+			switch (fieldType) {
+			case ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_CODE:
+				if ((mappedItemInfo.getMappingFieldBy() == ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_CODE
+						&& mappedItemInfo.getName() != null && mappedItemInfo.getName().length() > 0)
+						&& (fieldCode.compareToIgnoreCase(mappedItemInfo.getName()) == 0))
+					return mappedItemInfo.getMapInfoLineRef();
+						
+			case ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_DESCRIPTION:
+				if((mappedItemInfo.getMappingFieldBy() == ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_DESCRIPTION
+						&& mappedItemInfo.getDescription() != null && mappedItemInfo.getDescription().length() > 0)
+						&& (fieldCode.compareToIgnoreCase(mappedItemInfo.getDescription()) == 0))
+					return mappedItemInfo.getMapInfoLineRef();
+				
+			case ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_BRAND:
+				 if((mappedItemInfo.getMappingFieldBy() == ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_BRAND
+						&& mappedItemInfo.getBrandName() != null && mappedItemInfo.getBrandName().length() > 0)
+						&& (fieldCode.compareToIgnoreCase(mappedItemInfo.getBrandName()) == 0))
+					 return mappedItemInfo.getMapInfoLineRef();
+							
+			case ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_BUYER:
+				if((mappedItemInfo.getMappingFieldBy() == ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_BUYER
+						&& mappedItemInfo.getBuyersItemId() != null && mappedItemInfo.getBuyersItemId().length() > 0)
+						&& (fieldCode.compareToIgnoreCase(mappedItemInfo.getBuyersItemId()) == 0))
+					return mappedItemInfo.getMapInfoLineRef();
+				
+			case ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_SELLER:
+				if((mappedItemInfo.getMappingFieldBy() == ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_SELLER 
+						&& mappedItemInfo.getSellersItemId() != null && mappedItemInfo.getSellersItemId().length() > 0)
+						&& (fieldCode.compareToIgnoreCase(mappedItemInfo.getSellersItemId()) == 0))
+					return mappedItemInfo.getMapInfoLineRef();
+				
+			case ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_MANUFACTURER:
+				if((mappedItemInfo.getMappingFieldBy() == ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_MANUFACTURER
+						&& mappedItemInfo.getManufacturersItemId() != null && mappedItemInfo.getManufacturersItemId().length() > 0)
+						&& (fieldCode.compareToIgnoreCase(mappedItemInfo.getManufacturersItemId()) == 0))
+					return mappedItemInfo.getMapInfoLineRef();
+				
+			case ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_MODEL:
+				if((mappedItemInfo.getMappingFieldBy() == ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_MODEL
+						&& mappedItemInfo.getModelName() != null && mappedItemInfo.getModelName().length() > 0)
+						&& (fieldCode.compareToIgnoreCase(mappedItemInfo.getModelName()) == 0))
+					return mappedItemInfo.getMapInfoLineRef();
+				
+			case ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_NOTE:
+				if((mappedItemInfo.getMappingFieldBy() == ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_NOTE
+						&& mappedItemInfo.getCommodityClassification() != null && mappedItemInfo.getCommodityClassification().length() > 0)
+						&& (fieldCode.compareToIgnoreCase(mappedItemInfo.getCommodityClassification()) == 0))
+					return mappedItemInfo.getMapInfoLineRef();
+			default:
+				break;
+			}
+		}
+		return 0;
+	}
+
+	
+	public static ArrayList getMappedItemList(CustomBusinessObject mappingInfo)
+	{
+		ArrayList ublMappedItemList = new ArrayList();
+		CustomBusinessObjects mappInfoReceivedLines = (CustomBusinessObjects) ProjectUtilEInv.getMemberValue(mappingInfo, "MappInfoReceivedLines");
+		if (mappInfoReceivedLines != null && mappInfoReceivedLines.size() > 0)
+			for (int i = 0; i < mappInfoReceivedLines.size(); i++)
+			{
+				CustomBusinessObject mappInfoLine = (CustomBusinessObject) mappInfoReceivedLines.get(i);
+				UBLItemInfo ublItemInfo = new UBLItemInfo();
+				ublItemInfo.setName(ProjectUtilEInv.getBOStringFieldValue(mappInfoLine, "Code"));
+				ublItemInfo.setDescription(ProjectUtilEInv.getBOStringFieldValue(mappInfoLine, "Description"));
+				ublItemInfo.setBrandName(ProjectUtilEInv.getBOStringFieldValue(mappInfoLine, "Brand"));
+				ublItemInfo.setModelName(ProjectUtilEInv.getBOStringFieldValue(mappInfoLine, "Model"));
+				ublItemInfo.setSellersItemId(ProjectUtilEInv.getBOStringFieldValue(mappInfoLine, "Seller"));
+				ublItemInfo.setBuyersItemId(ProjectUtilEInv.getBOStringFieldValue(mappInfoLine, "Buyer"));
+				ublItemInfo.setManufacturersItemId(ProjectUtilEInv.getBOStringFieldValue(mappInfoLine, "Manufacturer"));
+				ublItemInfo.setCommodityClassification(ProjectUtilEInv.getBOStringFieldValue(mappInfoLine, "Note"));
+				ublItemInfo.setMappingFieldBy(ProjectUtilEInv.getBOIntFieldValue(mappInfoLine, "UblField"));
+				ublItemInfo.setMapInfoLineRef(ProjectUtilEInv.getBOIntFieldValue(mappInfoLine, "LogicalRef"));
+				ublMappedItemList.add(ublItemInfo);
+				
+			}
+		return ublMappedItemList;
+	}
+	
+	public static QueryBusinessObject searchItemWithParams(IApplicationContext context, QueryParams params)
+	{
+		params.setCustomization(ProjectGlobalsEInv.getM_ProjectGUID());
+		QueryBusinessObjects results = new QueryBusinessObjects();
+		IQueryFactory factory = (IQueryFactory) context.getQueryFactory();
+		try {
+			factory.select("CQOItemSearch", params, results, -1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(results.size() > 0)
+			return results.get(0);
+		return null;
+	}
+	
+	public static int checkItemBySearchFieldOrder(IApplicationContext context, String searchField, int searchFieldOrder)
+	{
+		QueryBusinessObject result = null;
+		QueryParams params = new QueryParams();
+		switch (searchFieldOrder) 
+		{
+			case ProjectGlobalsEInv.ITEM_MAPPING_SEARCH_FIELD_CODE:
+				params.getEnabledTerms().enable("T_ITEMCODE");
+				params.getParameters().put("P_ITEMCODE", searchField);
+				result = searchItemWithParams(context, params);
+	     		return QueryUtil.getIntProp(result, "LOGICALREF");
+	     		
+			case ProjectGlobalsEInv.ITEM_MAPPING_SEARCH_FIELD_DESCRIPTION:
+				params.getEnabledTerms().enable("T_ITEMDESC");
+				params.getParameters().put("P_ITEMDESC", searchField);
+				result = searchItemWithParams(context, params);
+	     		return QueryUtil.getIntProp(result, "LOGICALREF");
+				
+			case ProjectGlobalsEInv.ITEM_MAPPING_SEARCH_FIELD_BRAND:
+				params.getEnabledTableLinks().enable("Brand");
+				params.getEnabledTerms().enable("T_BRAND");
+				params.getParameters().put("P_BRAND", searchField);
+				result = searchItemWithParams(context, params);
+				return QueryUtil.getIntProp(result, "LOGICALREF");
+			
+			case ProjectGlobalsEInv.ITEM_MAPPING_SEARCH_FIELD_ITEMARPCODE:
+				params.getEnabledTableLinks().enable("ItmARPAsgs");
+				params.getEnabledTerms().enable("T_ITEMARPCODE");
+				params.getParameters().put("P_ITEMARPCODE", searchField);
+				result = searchItemWithParams(context, params);
+				return QueryUtil.getIntProp(result, "LOGICALREF");
+
+			case ProjectGlobalsEInv.ITEM_MAPPING_SEARCH_FIELD_GTIPCODE:
+				params.getEnabledTableLinks().enable("GtipCode");
+				params.getEnabledTerms().enable("T_GTIP");
+				params.getParameters().put("P_GTIP", searchField);
+				result = searchItemWithParams(context, params);
+				return QueryUtil.getIntProp(result, "LOGICALREF");
+				
+			case ProjectGlobalsEInv.ITEM_MAPPING_SEARCH_FIELD_AUXCODE1:
+				params.getEnabledTerms().enable("T_AUXCODE");
+				params.getParameters().put("P_AUXCODE", searchField);
+				result = searchItemWithParams(context, params);
+	     		return QueryUtil.getIntProp(result, "LOGICALREF");
+	     		
+			case ProjectGlobalsEInv.ITEM_MAPPING_SEARCH_FIELD_AUXCODE2:
+				params.getEnabledTerms().enable("T_AUXCODE2");
+				params.getParameters().put("P_AUXCODE2", searchField);
+				result = searchItemWithParams(context, params);
+	     		return QueryUtil.getIntProp(result, "LOGICALREF");
+	     		
+			case ProjectGlobalsEInv.ITEM_MAPPING_SEARCH_FIELD_AUXCODE3:
+				params.getEnabledTerms().enable("T_AUXCODE3");
+				params.getParameters().put("P_AUXCODE3", searchField);
+				result = searchItemWithParams(context, params);
+	     		return QueryUtil.getIntProp(result, "LOGICALREF");
+			
+			case ProjectGlobalsEInv.ITEM_MAPPING_SEARCH_FIELD_AUXCODE4:
+				params.getEnabledTerms().enable("T_AUXCODE4");
+				params.getParameters().put("P_AUXCODE4", searchField);
+				result = searchItemWithParams(context, params);
+	     		return QueryUtil.getIntProp(result, "LOGICALREF");
+			
+			case ProjectGlobalsEInv.ITEM_MAPPING_SEARCH_FIELD_AUXCODE5:
+				params.getEnabledTerms().enable("T_AUXCODE5");
+				params.getParameters().put("P_AUXCODE5", searchField);
+				result = searchItemWithParams(context, params);
+	     		return QueryUtil.getIntProp(result, "LOGICALREF");
+	     		
+			case ProjectGlobalsEInv.ITEM_MAPPING_SEARCH_FIELD_PRODUCER:
+				params.getEnabledTerms().enable("T_PRODUCER");
+				params.getParameters().put("P_PRODUCER", searchField);
+				result = searchItemWithParams(context, params);
+	     		return QueryUtil.getIntProp(result, "LOGICALREF");
+	     		
+			case ProjectGlobalsEInv.ITEM_MAPPING_SEARCH_FIELD_BARCODE:
+				params.getEnabledTableLinks().enable("ItmARPAsgs");
+				params.getEnabledTerms().enable("T_BARCODE");
+				params.getParameters().put("P_BARCODE", searchField);
+				result = searchItemWithParams(context, params);
+				return QueryUtil.getIntProp(result, "LOGICALREF");
+			default:
+			break;
+		} 
+		return 0;
+	}
+	
+	
+	public static String getUBLField(UBLItemInfo ublItemInfo, int searchFieldBy)
+	{
+		switch (searchFieldBy) 
+		{
+			case ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_CODE:
+				return ublItemInfo.getName();
+			case ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_DESCRIPTION:
+				return ublItemInfo.getDescription();
+			case ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_BRAND:
+				return ublItemInfo.getBrandName();
+			case ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_BUYER:
+				return ublItemInfo.getBuyersItemId();
+			case ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_SELLER:
+				return ublItemInfo.getSellersItemId();
+			case ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_MANUFACTURER:
+				return ublItemInfo.getManufacturersItemId();
+			case ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_MODEL:
+				return ublItemInfo.getModelName();
+			case ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_NOTE:
+				return ublItemInfo.getCommodityClassification();
+
+			default:
+			break;
+		} 
+		return null;
+	}
+	
+	public static UBLItemInfo prepareUBLItemInfo(Element itemElement)
+	{
+		UBLItemInfo ublItemInfo = new UBLItemInfo();
+		ublItemInfo.setName(getNodeTextByTagName(itemElement, "cac:Item", "cbc:Name"));
+		ublItemInfo.setDescription(getNodeTextByTagName(itemElement, "cac:Item", "cbc:Description"));
+		ublItemInfo.setBrandName(getNodeTextByTagName(itemElement, "cac:Item", "cbc:BrandName"));
+		ublItemInfo.setModelName(getNodeTextByTagName(itemElement, "cac:Item", "cbc:ModelName"));
+		ublItemInfo.setSellersItemId(getNodeTextByTagName(itemElement, "cac:SellersItemIdentification", "cbc:ID"));
+		ublItemInfo.setBuyersItemId(getNodeTextByTagName(itemElement, "cac:BuyersItemIdentification", "cbc:ID"));
+		ublItemInfo.setManufacturersItemId(getNodeTextByTagName(itemElement, "cac:ManufacturersItemIdentification", "cbc:ID"));
+		ublItemInfo.setCommodityClassification(getNodeTextByTagName(itemElement, "cac:CommodityClassification", "cbc:ItemClassificationCode"));
+		return ublItemInfo;
+	}
+	
+	public static String getNodeTextByTagName(Element element, String elementName, String nodeName)
+	{
+		NodeList nList = element.getElementsByTagName(elementName);
+		if(nList != null)
+			for (int temp = 0; temp < nList.getLength(); temp++)
+			{
+				Node nNode = nList.item(temp);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE)
+				{
+					Element eElement = (Element) nNode;
+					if(eElement.getElementsByTagName(nodeName).item(0) != null)
+						return eElement.getElementsByTagName(nodeName).item(0).getTextContent();
+				}
+			}
+		
+		return "";
+	}
+	
+	public static QueryBusinessObject getMappingInfo(IApplicationContext context, int arpRef, int mapType, boolean isDefault)
+	{
+		QueryParams params = new QueryParams();
+		params.getEnabledTerms().enable("T_MAPTYPE");
+		params.getParameters().put("P_MAPTYPE", Integer.valueOf(mapType));
+		
+		if(isDefault)
+		{
+			params.getEnabledTerms().enable("T_ISDEFAULT");
+			params.getParameters().put("P_ISDEFAULT", Integer.valueOf(1));
+		}
+		else if(arpRef>0)
+		{
+			params.getEnabledTerms().enable("T_ARPREF");
+			params.getParameters().put("P_ARPREF", Integer.valueOf(arpRef));
+		}
+		
+		params.setCustomization(ProjectGlobalsEInv.getM_ProjectGUID());
+		QueryBusinessObjects results = new QueryBusinessObjects();
+		IQueryFactory factory = (IQueryFactory) context.getQueryFactory();
+		try {
+			factory.select("CQOMappingInfoBrowser", params, results, -1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(results.size() > 0)
+			return results.get(0);
+		return null;
+	}
 	
 	public static String getExportFilePath(String dlgTitle, String fltDesc, String extension)
 	{
@@ -418,7 +706,7 @@ public class ProjectUtilEInv
 		GOBOOrgUnit division = null;
 		try
 		{
-			division = (GOBOOrgUnit) UnityHelper.getBOByReference(context, GOBOOrgUnit.class, orgUnit.getParentRef());
+			division = (GOBOOrgUnit) UnityHelper.getBOByReference(context, GOBOOrgUnitAlias.class, orgUnit.getParentRef());
 			if (division != null)
 			{
 				if (division.getOrgUnitType() == GOConstants.ORGUNIT_DIVISION)
@@ -851,7 +1139,32 @@ public class ProjectUtilEInv
 		return null;
 	}	
 	
-	
+	public static CustomBusinessObjects searchCBOListByCond(IApplicationContext context, String BOName, String whereCond, int cascade)
+	{
+		CustomBusinessObject CBO = new CustomBusinessObject(BOName);
+		CBO.setCustomization(ProjectGlobalsEInv.getM_ProjectGUID());
+		FactoryParams params = new FactoryParams();
+		params.setCustomization(ProjectGlobalsEInv.getM_ProjectGUID());
+		params.setRequestLock(false);
+		params.setMaxCascadeDepth(cascade == 0 ? 1 : cascade);
+		params.setActiveFilter(whereCond);
+		try
+		{
+			CustomBusinessObjects objList = new CustomBusinessObjects();
+			if (context.getObjectFactory().search(objList, CBO, params, 0, IObjectFactory.SEARCH_GT, false))
+			{
+				if (objList != null && objList.size() > 0)
+				{
+					return objList;
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			context.getLogger().error("searchBOListByCond can not be executed properly: ", e);
+		}
+		return null;
+	}	
 
 	public static CustomBusinessObject readObjectGrid(JLbsXUIGridEvent event, String BOName, int BORef)
 	{

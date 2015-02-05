@@ -4,6 +4,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="Client"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container/logo"/>
-	<classpathentry kind="lib" path="C:/JAVA/_JGUAR_TEST_64BIT/workspace/logo/WebContent/Definitions/LbsDefinitions.jar"/>
+	<classpathentry kind="var" path="DEFINITIONS_PATH/LbsDefinitions.jar"/>
+	<classpathentry kind="lib" path="/logo/WebContent/WEB-INF/lib/Unity.jar" sourcepath="C:/JAVA/_JGUAR_TEST_64BIT/regfiles/Unity_v2.34.9.1.src.zip"/>
+	<classpathentry kind="lib" path="/logo/WebContent/WEB-INF/lib/UnityServer.jar" sourcepath="C:/JAVA/_JGUAR_TEST_64BIT/regfiles/Unity_v2.34.9.1.src.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

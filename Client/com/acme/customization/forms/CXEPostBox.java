@@ -21,10 +21,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.acme.customization.UBLItemInfo;
 import com.acme.customization.shared.ProjectGlobalsEInv;
 import com.acme.customization.shared.ProjectUtilEInv;
+import com.lbs.admin.bo.GOBOGTIPCode;
 import com.lbs.data.grids.JLbsQueryGrid;
 import com.lbs.data.grids.JLbsQuerySelectionGrid;
+import com.lbs.data.objects.BusinessObject;
 import com.lbs.data.objects.BusinessObjects;
 import com.lbs.data.objects.CustomBusinessObject;
 import com.lbs.data.objects.CustomBusinessObjects;
@@ -36,9 +39,15 @@ import com.lbs.grids.JLbsObjectListGrid;
 import com.lbs.remoteclient.IClientContext;
 import com.lbs.transport.RemoteMethodResponse;
 import com.lbs.unity.UnityConstants;
+import com.lbs.unity.UnityHelper;
 import com.lbs.unity.lo.bo.LOBOInvoice;
+import com.lbs.unity.mm.bo.MMBOARPItemAsgs;
+import com.lbs.unity.mm.bo.MMBOItem;
+import com.lbs.unity.mm.bo.MMBOItemARPAsg;
+import com.lbs.unity.mm.bo.MMBOItemBrandAndModel;
 import com.lbs.unity.mm.bo.MMBOItemLink;
 import com.lbs.unity.mm.bo.MMBOUomDefinition;
+import com.lbs.unity.ss.bo.SSBOBrand;
 import com.lbs.util.DateUtil;
 import com.lbs.util.JLbsFileUtil;
 import com.lbs.util.QueryUtil;
@@ -58,6 +67,8 @@ public class CXEPostBox {
 	private JLbsXUIControlEvent m_Event = null;
 	private JLbsXUIPane m_Container = null;
 	private IClientContext m_Context = null;
+	
+	private MMBOItem m_Item = null; 
 	
 	public void onReceivedGridModifyQuery(JLbsXUIDataGridEvent event)
 	{
@@ -86,7 +97,7 @@ public class CXEPostBox {
 	public void onClickSaveRecieved(JLbsXUIControlEvent event)
 	{
 		
-		CustomBusinessObject approvalBO = ProjectUtilEInv.createNewCBO("CBOApproval");
+		/*CustomBusinessObject approvalBO = ProjectUtilEInv.createNewCBO("CBOApproval");
 		approvalBO._setState(CustomBusinessObject.STATE_NEW);
 		Calendar now = DateUtil.getToday();
 		ProjectUtilEInv.setMemberValue(approvalBO, "Date_", ProjectUtilEInv.getToday(now));
@@ -117,7 +128,7 @@ public class CXEPostBox {
 		}
 		ProjectUtilEInv.setMemberValue(approvalBO, "LData", fileContents);
 		
-		ProjectUtilEInv.persistCBO(event.getClientContext(), approvalBO);
+		ProjectUtilEInv.persistCBO(event.getClientContext(), approvalBO);*/
 		
 		ILbsQueryGrid recievedGrid = (ILbsQueryGrid) m_Container.getComponentByTag(100);
 		QueryBusinessObject qbo = (QueryBusinessObject) recievedGrid.getSelectedObject();
@@ -299,164 +310,170 @@ public class CXEPostBox {
 		byte [] LData = QueryUtil.getByteArrProp(qbo.getProperties(), "LDATA");
 		if (LData == null)
 			return ;
+		ArrayList mappedMappingInfoLines = new ArrayList();
 		
 		CustomBusinessObject approval = ProjectUtilEInv.readObject(m_Context, "CBOApproval", 
 				QueryUtil.getIntProp(qbo, "LOGICALREF"));
 		CustomBusinessObject mappingInfo = (CustomBusinessObject) ProjectUtilEInv.getMemberValue(approval, "MappingInfo");
-		HashMap itemUnitMap = createItemUnitListByXML(LData);
-		CustomBusinessObjects mappInfoLines = null;
+		ArrayList ublItemMapList = createUBLItemMapListByXML(LData);
+		CustomBusinessObjects mappInfoReceivedLines = null;
 		if (mappingInfo == null)
-		{
-			mappingInfo = ProjectUtilEInv.createNewCBO("CBOMappingInfo");
-			mappingInfo.setMemberValue("Sender", QueryUtil.getStringProp(qbo, "SENDER"));
-			Iterator iterator = itemUnitMap.entrySet().iterator();
-			while (iterator.hasNext())
+		{	
+			QueryBusinessObject defaultMapInfo = ProjectUtilEInv.getMappingInfo(m_Context, 0, ProjectGlobalsEInv.MAPPING_TYPE_RECEIVED, true);
+			for (int i = 0; i < ublItemMapList.size(); i++)
 			{
-				Entry element = (Entry) iterator.next();
-				String itemName = (String) element.getKey();
-				String itemGlobalUnit = (String) element.getValue();
-				createNewMappingInfoLine(mappingInfo, itemName, itemGlobalUnit, ProjectGlobalsEInv.MAPPING_CARD_TYPE_ITEM);
+				UBLItemInfo ublItemInfo = (UBLItemInfo) ublItemMapList.get(0);
+				String ublField = ProjectUtilEInv.getUBLField(ublItemInfo, QueryUtil.getIntProp(defaultMapInfo, "SEARCHBY"));
+				int itemRef = 0;
+				if (QueryUtil.getIntProp(defaultMapInfo, "SEARCHFIELDORDER1") != -1)
+				{
+					itemRef = ProjectUtilEInv.checkItemBySearchFieldOrder(m_Context, ublField, QueryUtil.getIntProp(defaultMapInfo, "SEARCHFIELDORDER1"));  
+				}
+				if (itemRef == 0 && QueryUtil.getIntProp(defaultMapInfo, "SEARCHFIELDORDER2") != -1)
+				{
+					itemRef = ProjectUtilEInv.checkItemBySearchFieldOrder(m_Context, ublField, QueryUtil.getIntProp(defaultMapInfo, "SEARCHFIELDORDER2"));  
+				}
+				if (itemRef == 0 && QueryUtil.getIntProp(defaultMapInfo, "SEARCHFIELDORDER3") != -1)
+				{
+					itemRef = ProjectUtilEInv.checkItemBySearchFieldOrder(m_Context, ublField, QueryUtil.getIntProp(defaultMapInfo, "SEARCHFIELDORDER3"));  
+				}
+				
+				if (itemRef == 0)
+				{
+					if(mappingInfo == null)
+					{
+						mappingInfo = ProjectUtilEInv.createNewCBO("CBOMappingInfo");
+						mappingInfo.setMemberValue("Sender", QueryUtil.getStringProp(qbo, "SENDER"));
+					}
+					createNewMappingInfoLine(mappingInfo, ublItemInfo);
+				}
+				
 			}
-			mappInfoLines = (CustomBusinessObjects) ProjectUtilEInv.getMemberValue(mappingInfo, "MappInfoLines");
 		}
 		else
 		{
-			ArrayList mappedItemCodeList = getMappedItemCodeList(mappingInfo);
-			Iterator iterator = itemUnitMap.entrySet().iterator();
-			while (iterator.hasNext())
+			ArrayList mappedItemList = ProjectUtilEInv.getMappedItemList(mappingInfo);
+			for (int i = 0; i < ublItemMapList.size(); i++)
 			{
-				Entry element = (Entry) iterator.next();
-				String itemName = (String) element.getKey();
-				String itemGlobalUnit = (String) element.getValue();
-				if(!mappedItemCodeList.contains(itemName))
+				UBLItemInfo ublItemInfo = (UBLItemInfo) ublItemMapList.get(0);
+				int mappInfoLineRef = 0;
+				if(ublItemInfo.getName()!=null && ublItemInfo.getName().length()>0)
+					mappInfoLineRef = ProjectUtilEInv.checkMappedItemList(mappedItemList, ublItemInfo.getName(), ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_CODE);
+				
+				if(mappInfoLineRef == 0 && ublItemInfo.getDescription()!=null && ublItemInfo.getDescription().length()>0)
+					mappInfoLineRef = ProjectUtilEInv.checkMappedItemList(mappedItemList, ublItemInfo.getDescription(), ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_DESCRIPTION);
+				
+				if(mappInfoLineRef == 0 && ublItemInfo.getBrandName()!=null && ublItemInfo.getBrandName().length()>0)
+					mappInfoLineRef = ProjectUtilEInv.checkMappedItemList(mappedItemList, ublItemInfo.getBrandName(), ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_BRAND);
+				
+				if(mappInfoLineRef == 0 && ublItemInfo.getBuyersItemId()!=null && ublItemInfo.getBuyersItemId().length()>0)
+					mappInfoLineRef = ProjectUtilEInv.checkMappedItemList(mappedItemList, ublItemInfo.getBuyersItemId(), ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_BUYER);
+				
+				if(mappInfoLineRef == 0 && ublItemInfo.getSellersItemId()!=null && ublItemInfo.getSellersItemId().length()>0)
+					mappInfoLineRef = ProjectUtilEInv.checkMappedItemList(mappedItemList, ublItemInfo.getSellersItemId(), ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_SELLER);
+				
+				if(mappInfoLineRef == 0 && ublItemInfo.getModelName()!=null && ublItemInfo.getModelName().length()>0)
+					mappInfoLineRef = ProjectUtilEInv.checkMappedItemList(mappedItemList, ublItemInfo.getModelName(), ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_MODEL);
+				
+				if(mappInfoLineRef == 0 && ublItemInfo.getManufacturersItemId()!=null && ublItemInfo.getManufacturersItemId().length()>0)
+					mappInfoLineRef = ProjectUtilEInv.checkMappedItemList(mappedItemList, ublItemInfo.getManufacturersItemId(), ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_MANUFACTURER);
+				
+				if(mappInfoLineRef == 0 && ublItemInfo.getCommodityClassification()!=null && ublItemInfo.getCommodityClassification().length()>0)
+					mappInfoLineRef = ProjectUtilEInv.checkMappedItemList(mappedItemList, ublItemInfo.getCommodityClassification(), ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_NOTE);
+					
+				if(mappInfoLineRef == 0)
 				{
-					createNewMappingInfoLine(mappingInfo, itemName, itemGlobalUnit, ProjectGlobalsEInv.MAPPING_CARD_TYPE_ITEM);
+					createNewMappingInfoLine(mappingInfo, ublItemInfo);
 					
 				}
-			}
-			mappInfoLines = (CustomBusinessObjects) ProjectUtilEInv.getMemberValue(mappingInfo, "MappInfoLines");
-			for (int i = mappInfoLines.size() - 1; i >= 0; i--)
-			{
-				CustomBusinessObject line = (CustomBusinessObject) mappInfoLines.get(i);
-				if(ProjectUtilEInv.getBOIntFieldValue(line, "LogicalRef") > 0 
-						&& ProjectUtilEInv.getBOIntFieldValue(line, "MCardRef") > 0)
-						mappInfoLines.remove(i);
-				else
+				/*else
 				{
-					if (ProjectUtilEInv.getMemberValue(line, "Item") == null) {
-						ProjectUtilEInv.setMemberValue(line, "Item",
-								new MMBOItemLink());
-					}
-					if (ProjectUtilEInv.getMemberValue(line, "Units") == null) {
-						ProjectUtilEInv.setMemberValue(line, "Units",
-								new BusinessObjects<MMBOUomDefinition>());
-					}
+					mappedMappingInfoLines.add(mappInfoReceivedLines.get(ublItemInfo.getMapInfoLineIndex()));
+				}*/
+			}
+		}
+			
+		mappInfoReceivedLines = (CustomBusinessObjects) ProjectUtilEInv.getMemberValue(mappingInfo, "MappInfoReceivedLines");
+		for (int i = mappInfoReceivedLines.size() - 1; i >= 0; i--)
+		{
+			CustomBusinessObject line = (CustomBusinessObject) mappInfoReceivedLines.get(i);
+			if(ProjectUtilEInv.getBOIntFieldValue(line, "LogicalRef") > 0 
+					&& ProjectUtilEInv.getBOIntFieldValue(line, "MCardRef") > 0)
+			{
+				    mappedMappingInfoLines.add(line);
+					mappInfoReceivedLines.remove(i);
+			}
+			else
+			{
+				if (ProjectUtilEInv.getMemberValue(line, "Item") == null) {
+					ProjectUtilEInv.setMemberValue(line, "Item",
+							new MMBOItemLink());
+				}
+				if (ProjectUtilEInv.getMemberValue(line, "Units") == null) {
+					ProjectUtilEInv.setMemberValue(line, "Units",
+							new BusinessObjects<MMBOUomDefinition>());
 				}
 			}
-			
 		}
-		if (mappInfoLines != null && mappInfoLines.size() > 0)
+		
+		if (mappInfoReceivedLines != null && mappInfoReceivedLines.size() > 0)
 		{
-			mappInfoLines.getDeleted().clear();
+			mappingInfo.setMemberValue("MappedInfoLines", mappedMappingInfoLines);
+			mappInfoReceivedLines.getDeleted().clear();
 			ProjectUtilEInv.setMemberValue(mappingInfo, "FromPostBox", Integer.valueOf(1));
 			m_Container.openChild("Forms/CXFMappingInfo.lfrm", mappingInfo, true, JLbsXUITypes.XUIMODE_DBUPDATE);
 		}
 	}
 	
-	private ArrayList getMappedItemCodeList(CustomBusinessObject mappingInfo)
-	{
-		ArrayList mappedItemCodeList = new ArrayList();
-		CustomBusinessObjects mappInfoLines = (CustomBusinessObjects) ProjectUtilEInv.getMemberValue(mappingInfo, "MappInfoLines");
-		if (mappInfoLines != null && mappInfoLines.size() > 0)
-			for (int i = 0; i < mappInfoLines.size(); i++)
-			{
-				CustomBusinessObject mappInfoLine = (CustomBusinessObject) mappInfoLines.get(i);
-				String code = ProjectUtilEInv.getBOStringFieldValue(mappInfoLine, "Code");
-				if(!mappedItemCodeList.contains(code))
-					mappedItemCodeList.add(code);
-				
-			}
-		return mappedItemCodeList;
-	}
 	
-	private void createNewMappingInfoLine(CustomBusinessObject mappingInfo, String itemCode, String unitCode, int cardType)
+
+	
+	private void createNewMappingInfoLine(CustomBusinessObject mappingInfo, UBLItemInfo ublItemInfo)
 	{
-		CustomBusinessObjects mappInfoLines = null;
-		if (ProjectUtilEInv.getMemberValue(mappingInfo, "MappInfoLines") == null)
-			mappInfoLines = new CustomBusinessObjects();
+		CustomBusinessObjects mappInfoReceivedLines = null;
+		if (ProjectUtilEInv.getMemberValue(mappingInfo, "MappInfoReceivedLines") == null)
+			mappInfoReceivedLines = new CustomBusinessObjects();
 		else
-			mappInfoLines = (CustomBusinessObjects) ProjectUtilEInv.getMemberValue(mappingInfo, "MappInfoLines");
+			mappInfoReceivedLines = (CustomBusinessObjects) ProjectUtilEInv.getMemberValue(mappingInfo, "MappInfoReceivedLines");
 		CustomBusinessObject mappInfoLine = ProjectUtilEInv.createNewCBO("CBOMappingInfoLine");
-		ProjectUtilEInv.setMemberValue(mappInfoLine, "CardType", cardType);
-		ProjectUtilEInv.setMemberValue(mappInfoLine, "Code", itemCode); 
-		ProjectUtilEInv.setMemberValue(mappInfoLine, "UnitCode", unitCode);
-		ProjectUtilEInv.setMemberValue(mappInfoLine, "MCardType", cardType);
+		ProjectUtilEInv.setMemberValue(mappInfoLine, "CardType", ProjectGlobalsEInv.MAPPING_CARD_TYPE_ITEM);
+		ProjectUtilEInv.setMemberValue(mappInfoLine, "UblField", ProjectGlobalsEInv.ITEM_MAPPING_UBL_FIELD_CODE);
+		ProjectUtilEInv.setMemberValue(mappInfoLine, "Code", ublItemInfo.getName());
+		ProjectUtilEInv.setMemberValue(mappInfoLine, "Description", ublItemInfo.getDescription());
+		ProjectUtilEInv.setMemberValue(mappInfoLine, "Buyer", ublItemInfo.getBuyersItemId());
+		ProjectUtilEInv.setMemberValue(mappInfoLine, "Seller", ublItemInfo.getSellersItemId());
+		ProjectUtilEInv.setMemberValue(mappInfoLine, "Manufacturer", ublItemInfo.getManufacturersItemId());
+		ProjectUtilEInv.setMemberValue(mappInfoLine, "Brand", ublItemInfo.getBrandName());
+		ProjectUtilEInv.setMemberValue(mappInfoLine, "Model", ublItemInfo.getModelName());
+		ProjectUtilEInv.setMemberValue(mappInfoLine, "Note", ublItemInfo.getCommodityClassification());
+		ProjectUtilEInv.setMemberValue(mappInfoLine, "MField", ProjectGlobalsEInv.ITEM_MAPPING_SEARCH_FIELD_CODE);
+		ProjectUtilEInv.setMemberValue(mappInfoLine, "MCardType", ProjectGlobalsEInv.MAPPING_CARD_TYPE_ITEM);
 		ProjectUtilEInv.setMemberValue(mappInfoLine, "MCardRef", 0);
 		ProjectUtilEInv.setMemberValue(mappInfoLine, "MUnitRef", 0);
 		ProjectUtilEInv.setMemberValue(mappInfoLine, "MUnitSetRef", 0);
 		ProjectUtilEInv.setMemberValue(mappInfoLine, "Item", new MMBOItemLink());
 		ProjectUtilEInv.setMemberValue(mappInfoLine, "Units", new BusinessObjects<MMBOUomDefinition>());
-		mappInfoLines.add(mappInfoLine);
-		ProjectUtilEInv.setMemberValue(mappingInfo, "MappInfoLines", mappInfoLines);
+		mappInfoReceivedLines.add(mappInfoLine);
+		ProjectUtilEInv.setMemberValue(mappingInfo, "MappInfoReceivedLines", mappInfoReceivedLines);
 	}
 		
-	private HashMap createItemUnitListByXML(byte [] LData)
+	private ArrayList createUBLItemMapListByXML(byte [] LData)
 	{
 		Document invoiceXML = ProjectUtilEInv.getXMLDocument(LData);
 		NodeList nodeList = invoiceXML.getElementsByTagName("cac:InvoiceLine");
-		HashMap itemUnitMap = new HashMap();
+		ArrayList ublItemMapList = new ArrayList();
 		for(int i=0; i < nodeList.getLength(); i++)
 		{
 			Element element = (Element) nodeList.item(i) ;
 			String name = null;
 			String globalUnitCode = null;
-			if(element.getElementsByTagName("cbc:InvoicedQuantity").item(0) != null)
-			{
-				Node quantityNode = (Node) element.getElementsByTagName("cbc:InvoicedQuantity").item(0);
-				//unit
-				if (quantityNode.getAttributes().getNamedItem("unitCode") != null)
-					globalUnitCode = quantityNode.getAttributes().getNamedItem("unitCode").getNodeValue();  
-				
-			}
 			if(element.getElementsByTagName("cac:Item").item(0) != null)
 			{
-				name = getNodeTextByTagName(element, "cac:Item", "cbc:Name");
+				ublItemMapList.add(ProjectUtilEInv.prepareUBLItemInfo(element));
 			}
-			if (name != null && globalUnitCode != null)
-			{
-				if(itemUnitMap.containsKey(name))
-				{
-					String unitCode = (String) itemUnitMap.get(name);
-					unitCode = globalUnitCode;
-					itemUnitMap.put(name, unitCode);
-					
-				}
-				else
-				{
-					itemUnitMap.put(name, globalUnitCode);
-				}
-			}
+			
 		}
-		return itemUnitMap;
+		return ublItemMapList;
 	}
 		
-	private  String getNodeTextByTagName(Element element, String elementName, String nodeName)
-	{
-		NodeList nList = element.getElementsByTagName(elementName);
-		if(nList != null)
-			for (int temp = 0; temp < nList.getLength(); temp++)
-			{
-				Node nNode = nList.item(temp);
-				if (nNode.getNodeType() == Node.ELEMENT_NODE)
-				{
-					Element eElement = (Element) nNode;
-					if(eElement.getElementsByTagName(nodeName).item(0) != null)
-						return eElement.getElementsByTagName(nodeName).item(0).getTextContent();
-				}
-			}
-		
-		return "";
-	}
-
-
 }
